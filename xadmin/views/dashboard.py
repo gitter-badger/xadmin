@@ -85,6 +85,7 @@ class UserWidgetAdmin(object):
     )
 
     def formfield_for_dbfield(self, db_field, **kwargs):
+        # print('self.request',self.request)
         if db_field.name == 'widget_type':
             widgets = widget_manager.get_widgets(self.request.GET.get('page_id', ''))
             form_widget = WidgetTypeSelect(widgets)

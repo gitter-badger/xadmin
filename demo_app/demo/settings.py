@@ -25,13 +25,16 @@ SECRET_KEY = 'l!fafmjcqyn+j+zz1@2@wt$o8w8k(_dhgub%41l#k3zi2m-b%m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 LANGUAGES = (
-    ('en', _('English')),
+    # ('en', _('English')),
     ('zh-hans', _('Chinese')),
 )
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['xadmin.guofeifei.com','127.0.0.1']
 
-
+SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
+SITE_ROOT = os.path.abspath(os.path.join(SITE_ROOT, '../'))
+STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
+STATIC_URL = '/static/'
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'viewflow',
     'xadmin',
     'crispy_forms',
     'reversion',
@@ -112,10 +115,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
+MEDIA_URL='/media/'
+LANGUAGE_CODE = 'zh-hans'
 
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 

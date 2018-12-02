@@ -208,7 +208,8 @@ class ListAdminView(ModelAdminView):
         """
         Get model queryset. The query has been filted and ordered.
         """
-        # First, get queryset from base class.
+        # First, get queryset from base class
+        # print('self.request', self.request,self.user.id,self.user.is_superuser)
         queryset = self.queryset()
 
         # Use select_related() if one of the list_display options is a field
