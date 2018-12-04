@@ -1,6 +1,7 @@
 from django import template
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.db import models, transaction
+from django.urls.base import reverse, NoReverseMatch
 from django.forms.models import modelform_factory
 from django.forms import Media
 from django.http import Http404, HttpResponse
@@ -18,45 +19,68 @@ from xadmin.views.list import EMPTY_CHANGELIST_VALUE
 from xadmin.layout import FormHelper
 
 
-class EditablePlugin(BaseAdminPlugin):
+class PrintablePlugin(BaseAdminPlugin):
 
-    list_editable = []
+    list_printable = []
 
     def __init__(self, admin_view):
-        super(EditablePlugin, self).__init__(admin_view)
-        self.editable_need_fields = {}
+        super(PrintablePlugin, self).__init__(admin_view)
+        self.printable_need_fields = {}
 
     def init_request(self, *args, **kwargs):
-        active = bool(self.request.method == 'GET' and self.admin_view.has_change_permission() and self.list_editable)
+        print('1212121')
+        active = bool(self.request.method == 'GET' and self.list_printable)
+        print('active',active,self.list_printable)
         if active:
             self.model_form = self.get_model_view(ModelFormAdminUtil, self.model).form_obj
         return active
 
     def result_item(self, item, obj, field_name, row):
-        if self.list_editable and item.field and item.field.editable and (field_name in self.list_editable):
+        print('afeiafeiafei1314',item.field)
+        if self.list_printable and item.field and (field_name in self.list_printable) and '通过'==item.value:
             pk = getattr(obj, obj._meta.pk.attname)
             field_label = label_for_field(field_name, obj,
                                           model_admin=self.admin_view,
                                           return_attr=False
                                           )
-            # print('app.ccpa.status',field_name,field_label,item.field,row,obj,item)
-            # print('item.field',item.field,item.value)
-            # if '通过'==item.value:
-            #     print('item.value',item.value)
-                # item.wraps.insert(0, '<span class="editable-field">%s</span>')
-            item.wraps.insert(0, '<span class="editable-field">%s</span>')
-            item.btns.append((
-                '<a class="editable-handler" title="%s" data-editable-field="%s" data-editable-loadurl="%s">' +
-                '<i class="fa fa-edit"></i></a>') %
-                (_(u"Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk) + '?fields=' + field_name))
+            # print('afeiafeiafei1212')
+            # item.wraps.insert(0, '<span class="editable-field">%s</span>')
+            # item.btns.append((
+            #     '<a class="printable-handler" title="%s" data-printable-field="%s" data-printable-loadurl="%s">' +
+            #     '<i class="fa fa-print"></i></a>') %
+            #     (_(u"Enter %s") % field_label, field_name, self.admin_view.model_admin_url('patch', pk) + '?fields=' + field_name))
 
-            if field_name not in self.editable_need_fields:
-                self.editable_need_fields[field_name] = item.field
+            opts = obj
+            rel_obj = obj
+            # opts.app_label demo
+            print('1typeof rel_obj', rel_obj, type(rel_obj),obj.id)
+            # import django.contrib.auth.models.User
+            try:
+                # item_res_uri = reverse(
+                #     '%s:%s_%s_detail' % (self.admin_site.app_name,
+                #                          'demo', opts.model_name),
+                #     item.field)
+                item_res_uri=str(obj.id)+'/print'
+                print('item_res_uri',item_res_uri)
+                if item_res_uri:
+                    # edit_url = reverse(
+                    #     '%s:%s_%s_change' % (self.admin_site.app_name, 'demo', opts.model_name),
+                    #     item.field)
+                    edit_url='1212'
+                    item.btns.append(
+                        '<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s"><i class="fa fa-print"></i></a>'
+                        % (item_res_uri, edit_url, _(u'Details of %s') % str(rel_obj)))
+            except NoReverseMatch:
+                pass
+
+
+            if field_name not in self.printable_need_fields:
+                self.printable_need_fields[field_name] = item.field
         return item
 
     # Media
     def get_media(self, media):
-        if self.editable_need_fields:
+        if self.printable_need_fields:
 
             try:
                 m = self.model_form.media
@@ -64,7 +88,7 @@ class EditablePlugin(BaseAdminPlugin):
                 m = Media()
             media = media + m +\
                 self.vendor(
-                    'xadmin.plugin.editable.js', 'xadmin.widget.editable.css')
+                    'xadmin.plugin.printable.js', 'xadmin.widget.printable.css')
         return media
 
 
@@ -167,5 +191,5 @@ class EditPatchView(ModelFormAdminView, ListAdminView):
         return self.render_response(result)
 
 
-site.register_plugin(EditablePlugin, ListAdminView)
+site.register_plugin(PrintablePlugin, ListAdminView)
 site.register_modelview(r'^(.+)/patch/$', EditPatchView, name='%s_%s_patch')

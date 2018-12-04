@@ -35,6 +35,7 @@ class DetailsPlugin(BaseAdminPlugin):
                     has_change_perm = self.has_model_perm(rel_obj.__class__, 'change')
 
             if rel_obj and has_view_perm:
+                print('typeof rel_obj',rel_obj,type(rel_obj))
                 opts = rel_obj._meta
                 try:
                     item_res_uri = reverse(

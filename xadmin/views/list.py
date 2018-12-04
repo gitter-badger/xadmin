@@ -531,8 +531,10 @@ class ListAdminView(ModelAdminView):
         Generates the actual list of data.
         """
         item = ResultItem(field_name, row)
+
         try:
             f, attr, value = lookup_field(field_name, obj, self)
+            # print('f',f,'attr',attr,'value', value)
         except (AttributeError, ObjectDoesNotExist, NoReverseMatch):
             item.text = mark_safe("<span class='text-muted'>%s</span>" % EMPTY_CHANGELIST_VALUE)
         else:

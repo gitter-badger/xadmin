@@ -5,7 +5,7 @@ from .base import BaseAdminPlugin, BaseAdminView, CommAdminView, ModelAdminView,
 from .list import ListAdminView
 from .edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
 from .delete import DeleteAdminView
-from .detail import DetailAdminView
+from .detail import DetailAdminView,PrintAdminView
 from .form import FormAdminView
 from .dashboard import Dashboard, BaseWidget, widget_manager, ModelDashboard
 from .website import IndexView, LoginView, LogoutView, UserSettingView
@@ -13,7 +13,7 @@ from .website import IndexView, LoginView, LogoutView, UserSettingView
 __all__ = (
     'BaseAdminObject',
     'BaseAdminPlugin', 'BaseAdminView', 'CommAdminView', 'ModelAdminView', 'ListAdminView',
-    'ModelFormAdminView', 'CreateAdminView', 'UpdateAdminView', 'DeleteAdminView', 'DetailAdminView', 'FormAdminView',
+    'ModelFormAdminView', 'CreateAdminView', 'UpdateAdminView', 'DeleteAdminView', 'DetailAdminView','PrintAdminView', 'FormAdminView',
     'Dashboard', 'BaseWidget',
     'IndexView', 'LoginView', 'LogoutView',
     'filter_hook', 'csrf_protect_m'
@@ -37,6 +37,8 @@ def register_builtin_views(site):
         r'^(.+)/update/$', UpdateAdminView, name='%s_%s_change')
     site.register_modelview(
         r'^(.+)/detail/$', DetailAdminView, name='%s_%s_detail')
+    site.register_modelview(
+        r'^(.+)/print/$', PrintAdminView, name='%s_%s_print')
     site.register_modelview(
         r'^(.+)/dashboard/$', ModelDashboard, name='%s_%s_dashboard')
 

@@ -44,11 +44,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'viewflow',
+    # 'material',
+    # 'material.frontend',
+    # 'viewflow',
+    # 'viewflow.frontend',
     'xadmin',
     'crispy_forms',
     'reversion',
-
     'app',
 ]
 
@@ -131,3 +133,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+if DEBUG:
+    # django debug toolbar
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    DEBUG_TOOLBAR_CONFIG = {
+        'JQUERY_URL': '//cdn.bootcss.com/jquery/2.1.4/jquery.min.js',
+        # 或把jquery下载到本地然后取消下面这句的注释, 并把上面那句删除或注释掉
+        #'JQUERY_URL': '/static/jquery/2.1.4/jquery.min.js',
+        'SHOW_COLLAPSED': True,
+        'SHOW_TOOLBAR_CALLBACK': lambda x: True,
+    }

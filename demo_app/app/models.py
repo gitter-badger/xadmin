@@ -1,4 +1,5 @@
 from django.db import models
+# from viewflow.models import Process
 from django.contrib.auth.models import Group
 from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
@@ -173,9 +174,13 @@ class ccpa(models.Model):
     exam_address = models.CharField(max_length=128, verbose_name=u'考试地点')
     photo = models.ImageField(upload_to='upload/image/%Y/%m', max_length=100, verbose_name=u'上传照片', null=True, blank=True, )
     status = models.CharField(max_length=64,verbose_name=u'报名状态', choices=[(i, i) for i in (u"草稿", u"通过")], default='草稿')
+    card_no = models.CharField(max_length=64, verbose_name=u'准考证号')
 
     def __str__(self):
         return self.name
+
+    def get_card_no(self):
+        return self.id
 
     class Meta:
         verbose_name = u"CCPA报名表"
@@ -184,6 +189,7 @@ class ccpa(models.Model):
 
 @python_2_unicode_compatible
 class xss(models.Model):
+    model_name = 'xss'
     # UPLOAD_PATH_IMAGE = 'upload/image/'
     area = models.CharField(max_length=64, verbose_name=u'报名地区')
     train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
@@ -212,14 +218,45 @@ class xss(models.Model):
     exam_date = models.DateField(verbose_name=u'考试时间')
     exam_address = models.CharField(max_length=128, verbose_name=u'考试地点')
     photo = models.ImageField(upload_to='upload/image/%Y/%m', max_length=100, verbose_name=u'上传照片', null=True, blank=True, )
+
     status = models.CharField(max_length=64,verbose_name=u'报名状态', choices=[(i, i) for i in (u"草稿", u"通过")], default='草稿')
+    create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    update_date = models.DateTimeField(verbose_name='最近修改时间', auto_now=True)
+    # card_no = models.CharField(max_length=64, verbose_name=u'准考证号')
+    def get_card_no(self):
+        school_no = str(self.train.id).zfill(2)
+        bmyearm = self.create_date.strftime("%y%m")
+        print('bmyearm',bmyearm)
+        card_no =school_no+ bmyearm+str(self.id).zfill(4)
+
+        return card_no
+
+    get_card_no.short_description = "准考证号"
+    card_no = property(get_card_no)
+    # card_no.setter(verbose_name='准考证号')
 
     def __str__(self):
         return self.name
 
+    # def clean_fields(self, exclude=None):
+
+
+    # class Meta:
+
+
     class Meta:
         verbose_name = u"薪税师报名表"
+        # model_name = 'xss'
         verbose_name_plural = verbose_name
+        # swappable = 'AUTH_USER_MODEL'
+
         # permissions = (
         #     ("change_xss_status", "Can change the status of xss"),
         # )
+
+
+# @python_2_unicode_compatible
+# class xsstest(Process):
+#     # UPLOAD_PATH_IMAGE = 'upload/image/'
+#     area = models.CharField(max_length=64, verbose_name=u'报名地区')
+#     approved = models.BooleanField(default=False)

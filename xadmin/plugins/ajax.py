@@ -3,7 +3,7 @@ from django.forms.utils import ErrorDict
 from django.utils.html import escape
 from django.utils.encoding import force_text
 from xadmin.sites import site
-from xadmin.views import BaseAdminPlugin, ListAdminView, ModelFormAdminView, DetailAdminView
+from xadmin.views import BaseAdminPlugin, ListAdminView, ModelFormAdminView, DetailAdminView,PrintAdminView
 
 
 NON_FIELD_ERRORS = '__all__'
@@ -97,3 +97,4 @@ class AjaxDetailPlugin(BaseAjaxPlugin):
 site.register_plugin(AjaxListPlugin, ListAdminView)
 site.register_plugin(AjaxFormPlugin, ModelFormAdminView)
 site.register_plugin(AjaxDetailPlugin, DetailAdminView)
+site.register_plugin(AjaxDetailPlugin, PrintAdminView)

@@ -216,7 +216,7 @@ class MaintainInline(object):
 
 @xadmin.sites.register(ccpa)
 class ccpaAdmin(object):
-    list_display = ("name", "phone", "edu", "periods", "train", "area",'status')
+    list_display = ('card_no',"name", "phone", "edu", "periods", "train", "area",'status')
     list_editable = [ 'status']
     # list_display_links = ("name",)
     # wizard_form_list = [
@@ -229,6 +229,7 @@ class ccpaAdmin(object):
         "name"
     ]
     list_quick_filter = [{"field": "train", "limit": 10}]
+    exclude = ['status', 'card_no']
     # free_query_filter = True
     # search_fields = ["train","name"]
     # relfield_style = "train"
@@ -248,8 +249,9 @@ class ccpaAdmin(object):
 
 @xadmin.sites.register(xss)
 class xssAdmin(object):
-    list_display = ("name", "phone", "edu", "periods", "train", "area","status")
-    list_editable = [ 'status']
+    list_display = ("card_no","name","phone", "edu", "periods", "train", "area","status")
+    list_printable = [ 'status']
+    list_editable = ['status']
     # list_display_links = ("name",)
     # wizard_form_list = [
     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
@@ -260,7 +262,10 @@ class xssAdmin(object):
     list_filter = [
         "name"
     ]
-    list_quick_filter = [{"field": "train", "limit": 10}]
+    exclude = ['status']
+    # inlines = ['status']
+
+    # list_quick_filter = [{"field": "train", "limit": 10}]
     # free_query_filter = True
     # search_fields = ["train","name"]
     # relfield_style = "train"
@@ -275,10 +280,34 @@ class xssAdmin(object):
     def get_list_queryset(self):
         print('self.request', self.request)
         queryset = super().get_list_queryset()
+        print('self.queryset', self.queryset)
         if self.user.is_superuser:
             return queryset
         queryset = queryset.filter(train=self.request.user)
         return queryset
+
+    # def get_form_datas(self):
+    #     print('self.request', self.request)
+    #     queryset = super().get_form_datas()
+    #     print('queryset', queryset)
+    #     return queryset
+
+    # def get_context(self):
+    #     new_context = {
+    #         'card_no': ('Add %s') % '12',
+    #     }
+    #     context = super().get_context()
+    #     context.update(new_context)
+    #     print('context',context)
+    #     return context
+
+    # def result_item(self):
+    #     print('result_item0')
+    #     return super().result_item()
+        # queryset = super().result_item(self)
+        # print('queryset')
+        # return queryset
+
 
     # def get_form_datas(self):
     #     queryset = super().get_form_datas()
