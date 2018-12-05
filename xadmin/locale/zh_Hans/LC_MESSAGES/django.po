@@ -1182,9 +1182,17 @@ msgstr "重新登录"
 msgid "Please Login"
 msgstr "请登录"
 
-#: .\templates\xadmin\views\login.html:52
-msgid "Username"
-msgstr "用户名"
+#: .\templates\xadmin\views\stulogin.html:52
+msgid "name"
+msgstr "姓名"
+
+#: .\templates\xadmin\views\stulogin.html:52
+msgid "card_no"
+msgstr "准考证号"
+
+#: .\templates\xadmin\views\stulogin.html:52
+msgid "icc"
+msgstr "身份证号"
 
 #: .\templates\xadmin\views\login.html:64
 msgid "Password"

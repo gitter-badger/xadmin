@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 # Uncomment the next two lines to enable the admin:
 import xadmin
 from django.views import generic
+from app.views import printLogin
 from material.frontend import urls as frontend_urls
 xadmin.autodiscover()
 
@@ -20,7 +21,7 @@ from django.contrib import admin
 urlpatterns = [
     path(r'', xadmin.site.urls),
     # url(r'^$', generic.RedirectView.as_view(url='/workflow/', permanent=False)),
-    # url(r'', include(frontend_urls)),
+    url(r'^printlogin/$', printLogin),
 ]
 
 if settings.DEBUG:

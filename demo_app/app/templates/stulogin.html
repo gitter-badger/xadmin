@@ -1,0 +1,148 @@
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <meta name="robots" content="NONE,NOARCHIVE">
+  <title></title>
+
+  <link href="/static/xadmin/vendor/bootstrap/css/bootstrap.css" type="text/css" media="screen" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="/static/xadmin/css/themes/bootstrap-xadmin.css">
+
+  <link href="/static/xadmin/vendor/font-awesome/css/font-awesome.css" type="text/css" media="screen" rel="stylesheet">
+<link href="/static/xadmin/css/xadmin.main.css" type="text/css" media="screen" rel="stylesheet">
+<link href="/static/xadmin/css/xadmin.plugins.css" type="text/css" media="screen" rel="stylesheet">
+<link href="/static/xadmin/css/xadmin.responsive.css" type="text/css" media="screen" rel="stylesheet">
+
+
+<style type="text/css">
+  #panel-login {
+    max-width: 350px;
+  }
+  #panel-login .controls{
+    padding: 0px 15px 15px !important;
+  }
+
+  #panel-login .alert-block{
+    padding: 0px;
+  }
+  #panel-login .alert-block ul{
+    margin: 10px 15px;
+    padding-left: 0px;
+  }
+  #panel-login .alert-block ul li{
+    list-style-type: none;
+  }
+</style>
+
+  <script type="text/javascript" src="/static/xadmin/vendor/jquery/jquery.js"></script>
+
+  <script type="text/javascript">
+    window.__admin_media_prefix__ = "/static/xadmin/";
+    window.__admin_path_prefix__ = "/";
+    window.__admin_language_code__ = "";
+  </script>
+  <script type="text/javascript" src="/jsi18n/"></script>
+
+
+</head>
+<style type="text/css">
+  #panel-login {
+    max-width: 350px;
+  }
+  #panel-login .controls{
+    padding: 0px 15px 15px !important;
+  }
+
+  #panel-login .alert-block{
+    padding: 0px;
+  }
+  #panel-login .alert-block ul{
+    margin: 10px 15px;
+    padding-left: 0px;
+  }
+  #panel-login .alert-block ul li{
+    list-style-type: none;
+  }
+</style>
+<body>
+
+<div class="container">
+
+  <form action="" method="post" id="login-form">
+    <div class="panel panel-default panel-single" id="panel-login">
+    {% csrf_token %}
+    {% block login_form %}
+      <div class="panel-heading">
+        {% block login_heading %}
+        <h2 class="form-signin-heading">{% if title %}{{title}}{% else %}琪睿报名信息查询{% endif %}</h2>
+
+        {% endblock %}
+      </div>
+      <div class="panel-body">
+        {% if error %}
+        <div class="alert alert-block alert-danger">
+          <ul>
+            <li>{{ error }}</li>
+          </ul>
+        </div>
+        {% endif %}
+      {% include 'bootstrap3/errors.html' %}
+
+      <div id="div_id_name" class="row{% if form.name.errors %} has-error{% endif %}">
+        <div class="controls clearfix">
+        <div class="input-group input-group-lg">
+          <span class="input-group-addon"><i class="fa fa-user fa-fw"></i></span>
+          <input class="form-control input-lg" id="id_name" maxlength="254" name="name" type="text" placeholder="姓名">
+        </div>
+          <!--<p id="err" class="text-danger help-block">{{ error }}</p>-->
+        {% for error in form.name.errors %}
+            <p id="error_{{ forloop.counter }}_{{ field.auto_id }}" class="text-danger help-block">{{ error }}</p>
+        {% endfor %}
+        </div>
+      </div>
+
+        <div id="div_id_icc" class="row{% if form.icc.errors %} has-error{% endif %}">
+        <div class="controls clearfix">
+        <div class="input-group input-group-lg">
+          <span class="input-group-addon"><i class="fa fa-heart fa-fw"></i></span>
+          <input class="form-control input-lg" id="id_icc" maxlength="254" name="icc" type="text" placeholder="身份证号">
+        </div>
+        {% for error in form.icc.errors %}
+            <p id="error_{{ forloop.counter }}_{{ field.auto_id }}" class="text-danger help-block">{{ error }}</p>
+        {% endfor %}
+        </div>
+      </div>
+
+        <div id="div_id_card_no" class="row{% if form.card_no.errors %} has-error{% endif %}">
+        <div class="controls clearfix">
+        <div class="input-group input-group-lg">
+          <span class="input-group-addon"><i class="fa fa-star fa-fw"></i></span>
+          <input class="form-control input-lg" id="card_no" maxlength="254" name="card_no" type="text" placeholder="准考证号">
+        </div>
+        {% for error in form.name.errors %}
+            <p id="error_{{ forloop.counter }}_{{ field.auto_id }}" class="text-danger help-block">{{ error }}</p>
+        {% endfor %}
+        </div>
+      </div>
+
+
+      <input type="hidden" name="this_is_the_login_form" value="1" />
+      <input type="hidden" name="next" value="{{ next }}" />
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
+
+      </div>
+    {% endblock %}
+    </div>
+  </form>
+
+</div> <!-- /container -->
+
+<script type="text/javascript">
+document.getElementById('id_username').focus()
+</script>
+
+</body>

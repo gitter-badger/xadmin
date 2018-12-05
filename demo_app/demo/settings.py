@@ -29,7 +29,7 @@ LANGUAGES = (
     ('zh-hans', _('Chinese')),
 )
 
-ALLOWED_HOSTS = ['xadmin.guofeifei.com','127.0.0.1']
+ALLOWED_HOSTS = ['xadmin.guofeifei.com','127.0.0.1','localhost']
 
 SITE_ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE_ROOT = os.path.abspath(os.path.join(SITE_ROOT, '../'))

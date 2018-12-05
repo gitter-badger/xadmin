@@ -1,6 +1,7 @@
 from django import forms
 
 from django.contrib.auth import authenticate
+from app.models import xss,ccpa
 from django.contrib.auth.forms import AuthenticationForm
 
 from django.utils.translation import ugettext_lazy, ugettext as _
@@ -41,6 +42,38 @@ class AdminAuthenticationForm(AuthenticationForm):
                         if user.check_password(password):
                             message = _("Your e-mail address is not your username."
                                         " Try '%s' instead.") % user.username
+                raise forms.ValidationError(message)
+            elif not self.user_cache.is_active or not self.user_cache.is_staff:
+                raise forms.ValidationError(message)
+        return self.cleaned_data
+
+
+class StuAuthenticationForm(AuthenticationForm):
+    """
+    A custom authentication form used in the admin app.
+
+    """
+    this_is_the_login_form = forms.BooleanField(
+        widget=forms.HiddenInput, initial=1,
+        error_messages={'required': ugettext_lazy("Please log in again, because your session has expired.")})
+
+    def clean(self):
+        name = self.cleaned_data.get('name')
+        icc = self.cleaned_data.get('icc')
+        card_no = self.cleaned_data.get('card_no')
+        message = ERROR_MESSAGE
+
+        if name and icc and card_no:
+            self.user_cache = None
+            if self.user_cache is None:
+                # User = xss()
+                # Mistakenly entered e-mail address instead of username? Look it up.
+                try:
+                    xssuser = xss.objects.filter(name=name,icc=icc,card_no=card_no)
+                    ccpauser = ccpa.objects.filter(name=name,icc=icc,card_no=card_no)
+                except (xss.DoesNotExist, xss.MultipleObjectsReturned):
+                    # Nothing to do here, moving along.
+                    pass
                 raise forms.ValidationError(message)
             elif not self.user_cache.is_active or not self.user_cache.is_staff:
                 raise forms.ValidationError(message)

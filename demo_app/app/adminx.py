@@ -218,6 +218,7 @@ class MaintainInline(object):
 class ccpaAdmin(object):
     list_display = ('card_no',"name", "phone", "edu", "periods", "train", "area",'status')
     list_editable = [ 'status']
+    list_printable = ['status']
     # list_display_links = ("name",)
     # wizard_form_list = [
     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
@@ -229,7 +230,7 @@ class ccpaAdmin(object):
         "name"
     ]
     list_quick_filter = [{"field": "train", "limit": 10}]
-    exclude = ['status', 'card_no']
+    exclude = ['status']
     # free_query_filter = True
     # search_fields = ["train","name"]
     # relfield_style = "train"

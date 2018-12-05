@@ -174,8 +174,19 @@ class ccpa(models.Model):
     exam_address = models.CharField(max_length=128, verbose_name=u'考试地点')
     photo = models.ImageField(upload_to='upload/image/%Y/%m', max_length=100, verbose_name=u'上传照片', null=True, blank=True, )
     status = models.CharField(max_length=64,verbose_name=u'报名状态', choices=[(i, i) for i in (u"草稿", u"通过")], default='草稿')
-    card_no = models.CharField(max_length=64, verbose_name=u'准考证号')
+    # card_no = models.CharField(max_length=64, verbose_name=u'准考证号')
+    create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    update_date = models.DateTimeField(verbose_name='最近修改时间', auto_now=True)
+    def get_card_no(self):
+        school_no = str(self.train.id).zfill(3)
+        # bmyearm = self.create_date.strftime("1%m")
+        # print('bmyearm', bmyearm)
+        card_no = school_no + '1' + str(self.id).zfill(6)
 
+        return card_no
+
+    get_card_no.short_description = "准考证号"
+    card_no = property(get_card_no)
     def __str__(self):
         return self.name
 
@@ -183,7 +194,7 @@ class ccpa(models.Model):
         return self.id
 
     class Meta:
-        verbose_name = u"CCPA报名表"
+        verbose_name = u"CCPA项目"
         verbose_name_plural = verbose_name
 
 
@@ -224,10 +235,10 @@ class xss(models.Model):
     update_date = models.DateTimeField(verbose_name='最近修改时间', auto_now=True)
     # card_no = models.CharField(max_length=64, verbose_name=u'准考证号')
     def get_card_no(self):
-        school_no = str(self.train.id).zfill(2)
-        bmyearm = self.create_date.strftime("%y%m")
-        print('bmyearm',bmyearm)
-        card_no =school_no+ bmyearm+str(self.id).zfill(4)
+        school_no = str(self.train.id).zfill(3)
+        # bmyearm = self.create_date.strftime("2%m")
+        # print('bmyearm',bmyearm)
+        card_no =school_no+ '1'+str(self.id).zfill(6)
 
         return card_no
 
@@ -245,7 +256,7 @@ class xss(models.Model):
 
 
     class Meta:
-        verbose_name = u"薪税师报名表"
+        verbose_name = u"薪税师项目"
         # model_name = 'xss'
         verbose_name_plural = verbose_name
         # swappable = 'AUTH_USER_MODEL'

@@ -423,7 +423,7 @@ class PrintAdminView(ModelAdminView):
         self.request.current_app = self.admin_site.name
         print('context',context)
         response = TemplateResponse(self.request,
-                                    self.get_template_list('views/print_detail.html'),
+                                    self.get_template_list('views/print_card.html'),
                                     context)
         return response
 

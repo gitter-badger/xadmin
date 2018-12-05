@@ -8,7 +8,7 @@ from django.http import HttpResponse
 
 from .base import BaseAdminView, filter_hook
 from .dashboard import Dashboard
-from xadmin.forms import AdminAuthenticationForm
+from xadmin.forms import AdminAuthenticationForm,StuAuthenticationForm
 from xadmin.models import UserSettings
 from xadmin.layout import FormHelper
 
@@ -33,6 +33,43 @@ class UserSettingView(BaseAdminView):
         us.save()
         return HttpResponse('')
 
+class PrintLoginView(BaseAdminView):
+    print('787878')
+    title = _("Please Login")
+    login_form = None
+    login_template = None
+
+    @filter_hook
+    def update_params(self, defaults):
+        pass
+
+    @never_cache
+    def get(self, request, *args, **kwargs):
+        print('121212')
+        context = self.get_context()
+        helper = FormHelper()
+        helper.form_tag = False
+        helper.include_media = False
+        context.update({
+            'title': self.title,
+            'helper': helper,
+            'app_path': request.get_full_path(),
+            REDIRECT_FIELD_NAME: request.get_full_path(),
+        })
+        defaults = {
+            'extra_context': context,
+            # 'current_app': self.admin_site.name,
+            'authentication_form': StuAuthenticationForm,
+            'template_name': 'xadmin/views/stulogin.html',
+        }
+        self.update_params(defaults)
+        # return login(request, **defaults)
+        print('defaults',defaults)
+        return login.as_view(**defaults)(request)
+
+    @never_cache
+    def post(self, request, *args, **kwargs):
+        return self.get(request)
 
 class LoginView(BaseAdminView):
 

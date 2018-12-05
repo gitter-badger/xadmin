@@ -1,0 +1,178 @@
+﻿<html>
+<head>
+    <script language="javascript">
+        function printdiv(printpage) {
+            var headstr = "<html><head><title></title></head><body>";
+            var footstr = "</body>";
+            var newstr = document.all.item(printpage).innerHTML;
+            var oldstr = document.body.innerHTML;
+            document.body.innerHTML = headstr + newstr + footstr;
+            window.print();
+            document.body.innerHTML = oldstr;
+            return false;
+        }
+    </script>
+    <title>准考证打印</title>
+
+
+</head>
+
+<body>
+<!--//HTML Page-->
+<!--//Other content you wouldn't like to print-->
+<input align="right" name="b_print" type="button" class="ipt" onClick="printdiv('div_print');" value=" 打印 ">
+
+<div id="div_print">
+
+    <style type="text/css">
+        body {
+
+            font-family: "宋体";
+        }
+
+        .ksxz {
+            font-size: 14px;
+        }
+
+        .zcsj {
+
+            font-size: 16px;
+        }
+
+        .table tr td {
+            border: 1px solid #000000;
+            valign: "middle";
+            /*vertical-align: top; *!*/
+            vertical-align: middle;
+        }
+
+        .table tr {
+            height: 80px;
+            width: 100%
+        }
+    </style>
+
+    <!--<h1 style="Color:Red">The Div content which you want to print</h1>-->
+    <table hight="100%" width="100%">
+        <tr>
+            <td height="100">
+                <table width="100%" height="100%" border="0" cellspacing="2">
+                    <tr>
+                        <td width="50%" align="center">
+
+                            <table width="90%" height="100%" border="0"
+                                   style="border-collapse:separate; border-spacing:20px 0px;">
+                                <tr>
+                                    <td width="80%">
+                                        <h2 align="center">准考证</h2>
+                                        <br>
+                                        <table>
+                                            <tr>
+                                                <td width="70%">
+                                                    <table width="100%" height="100" border="0" class="zcsj">
+                                                        <tr>
+                                                            <td>项目名称：</td>
+                                                            <td><u style="min-width: 200px">{{verbose_name}}</u></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>准考证号：</td>
+                                                            <td><u style="min-width: 200px">{{object.card_no}}</u></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>姓 名：</td>
+                                                            <td><u style="min-width: 200px">{{object.name}}</u></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>证件类型：</td>
+                                                            <td><u style="min-width: 200px">身份证</u></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>证件号码：</td>
+                                                            <td><u style="min-width: 200px">{{object.icc}}</u></td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td align="center"
+                                                    style="vertical-align:middle ;border:0px solid #000000;border-collapse: collapse;">
+                                                    <div style="width:111px;height: 169px; ">
+                                                        <img width="111px" height="169px" src="/media/{{object.photo}}" class="field_img">
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+
+                                </tr>
+                                <!--<tr>-->
+                                <!--<td>业务电话：</td>-->
+                                <!--</tr>-->
+                                <tr>
+                                    <td colspan="2">
+                                        <table class="table" width="90%"
+                                               style="border:1px solid #000000;border-collapse: collapse;vertical-align:middle ;">
+                                            <tr align="center">
+                                                <td width="30%" style="vertical-align:middle ;">考试科目</td>
+                                                <td style="vertical-align:middle ;">
+                                                     {{object.type}}
+                                                    </td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td width="30%" style="vertical-align:middle ;">考试时间</td>
+                                                <td style="vertical-align:middle ;">{{object.exam_date}}</td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td width="30%" style="vertical-align:middle ;">考试地点</td>
+                                                <td style="vertical-align:middle ;">{{object.exam_address}}</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                        <td>
+                            <h2 align="center">考生须知</h2>
+                            <p class="ksxz">
+                                1、考生取得准考证应仔细核对相关信息正确与否，如发现姓名、第二代身份证号、照片等与本人实际不符，请及时与所在申报单位联系，并于考前办理完更正手续，否则不得参加考试。
+                                <br>2、考生须凭准考证和第二代身份证原件参加考试，对于军人、港澳台胞、外籍人士及尚未达到领取第二代身份证年龄的人员，可持军官证、士兵证、港澳台胞证、护照或学生证的原件参加考试。两证不可有缺，证件复印件无效。
+                                <br>3、考生只能携带用于答题的2B铅笔、橡皮、黑色水笔以及不带记忆功能的计算器及指针式手表。考试中严禁使用手机、手提电脑等通讯、电子设备、违者作考试作弊处理。
+                                <br>4、考生于考试前10分钟起进入考场，对号入座，迟到15分钟以上不得入场；考试前5分钟为阅卷时间，不得答题；开考后30分钟内不可交卷退场。考生交卷后，应立即离开考场，不得在考场附近逗留、谈论或喧哗。
+                                <br>5、考生进入考场后对号就坐，并将准考证、身份证放置在桌面左上角。
+                                <br>6、考生书面答题一律用黑色的水笔或钢笔，并根据试卷要求在设定的位置或答题纸上书写，用其他颜色笔或在草稿纸等规定范围以外的答题均属无效，若答题纸上有填涂题时只能使用2B铅笔涂黑。
+                                <br>7、考生须清楚无误地填写姓名和准考证号，凡漏填、错填或字迹不清无法辨认的答题一律作无效处理。
+                                <br>8、考生应自觉遵守考场秩序，保持考场安静，不得相互交谈，不得偷看他人试卷，不得夹带、换卷等；遇到问题，应举手向监考人员示意；考场内不准吸烟、吃东西或有其他违纪违规行为。
+                                <br>9、考生须严格遵守考场纪律、独立答卷，不得作弊或代考，并服从考场监考人员的管理。
+                                <br>10、考生不得将试题内容带出考场,不得传播、扩散试题内容。
+                                <br>11、考场不提供考生停车位,考生到考场参加考试，请使用公共交通。
+                            </p>
+
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="vertical-align:middle ;">
+                             <div align="right">
+                            <span align="center">
+                                国际注册会计师（税务师、财务经理）综合能力等级考试
+                            </span>
+                            <img style="width: 150px; height: 50px;" src="/media/upload/image/2018/右下图片1.jpg"
+                                 class="field_img">
+                            <img style="width: 50px; height: 50px" src="/media/upload/image/2018/右下图片2.jpg"
+                                 class="field_img">
+                        </div>
+                        </td>
+
+                    </tr>
+                </table>
+
+
+</div>
+<!--//Other content you wouldn't like to print-->
+<!--//Other content you wouldn't like to print-->
+</body>
+<script>
+    $(".modal-footer").hide();
+</script>
+</html
