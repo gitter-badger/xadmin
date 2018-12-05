@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 import xadmin
 from django.views import generic
 from app.views import printLogin
-from material.frontend import urls as frontend_urls
+# from material.frontend import urls as frontend_urls
 xadmin.autodiscover()
 
 # version模块自动注册需要版本控制的 Model
