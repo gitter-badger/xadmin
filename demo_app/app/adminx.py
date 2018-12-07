@@ -225,7 +225,7 @@ class ccpaAdmin(object):
     #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
     #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
     # ]
-    search_fields = ["name", "phone"]
+    search_fields = ["name", "phone", "train", "area"]
     list_filter = [
         "name"
     ]
