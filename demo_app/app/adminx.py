@@ -229,7 +229,7 @@ class ccpaAdmin(object):
     list_filter = [
         "name"
     ]
-    list_quick_filter = [{"field": "train", "limit": 10}]
+    # list_quick_filter = [{"field": "train", "limit": 10}]
     exclude = ['status']
     # free_query_filter = True
     # search_fields = ["train","name"]
@@ -263,7 +263,7 @@ class xssAdmin(object):
     list_filter = [
         "name"
     ]
-    exclude = ['status']
+    exclude = ['status','train']
     # inlines = ['status']
 
     # list_quick_filter = [{"field": "train", "limit": 10}]
@@ -286,6 +286,13 @@ class xssAdmin(object):
             return queryset
         queryset = queryset.filter(train=self.request.user)
         return queryset
+
+    def save_models(self):
+        # print('121212self.request', self.request,self)
+        flag = self.org_obj is None and 'create' or 'change'
+        if flag=='create':
+            self.new_obj.train_id = str(self.request.user.id)
+        super().save_models()
 
     # def get_form_datas(self):
     #     print('self.request', self.request)

@@ -1,15 +1,30 @@
 ﻿<html>
 <head>
     <script language="javascript">
+        function openBlank(action, data, n) {
+            var form = $("<form/>").attr('action', action).attr('method', 'post');
+            if (n)
+                form.attr('target', '_blank');
+            var input = '';
+            $.each(data, function (i, n) {
+                input += '<input type="hidden" name="' + i + '" value="' + n + '" />';
+            });
+            form.append(input).appendTo("body").css('display', 'none').submit();
+        }
+
         function printdiv(printpage) {
-            var headstr = "<html><head><title></title></head><body>";
+            var zkNum = $("#zkNum").text();
+            var xName = $("#xName").text();
+            var zjNum = $("#zjNum").text();
+            openBlank('/printlogin/',{card_no:zkNum,name:xName,icc:zjNum,csrfmiddlewaretoken: '{{ csrf_token }}'},true);
+/*            var headstr = "<html><head><title></title></head><body>";
             var footstr = "</body>";
             var newstr = document.all.item(printpage).innerHTML;
             var oldstr = document.body.innerHTML;
             document.body.innerHTML = headstr + newstr + footstr;
             window.print();
             document.body.innerHTML = oldstr;
-            return false;
+            return false;*/
         }
     </script>
     <title>准考证打印</title>
@@ -76,11 +91,11 @@
                                                         </tr>
                                                         <tr>
                                                             <td>准考证号：</td>
-                                                            <td><u style="min-width: 200px">{{object.card_no}}</u></td>
+                                                            <td ><u style="min-width: 200px" id="zkNum">{{object.card_no}}</u></td>
                                                         </tr>
                                                         <tr>
                                                             <td>姓 名：</td>
-                                                            <td><u style="min-width: 200px">{{object.name}}</u></td>
+                                                            <td ><u style="min-width: 200px" id="xName">{{object.name}}</u></td>
                                                         </tr>
                                                         <tr>
                                                             <td>证件类型：</td>
@@ -88,7 +103,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td>证件号码：</td>
-                                                            <td><u style="min-width: 200px">{{object.icc}}</u></td>
+                                                            <td><u style="min-width: 200px"  id="zjNum">{{object.icc}}</u></td>
                                                         </tr>
                                                     </table>
                                                 </td>
@@ -175,4 +190,4 @@
 <script>
     $(".modal-footer").hide();
 </script>
-</html
+</html>
