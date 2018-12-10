@@ -9,6 +9,12 @@ from django.conf.urls.static import static
 import xadmin
 from django.views import generic
 from app.views import printLogin
+from django.urls import re_path
+from django.conf import settings
+from django.views.static import serve
+from django.views.generic import RedirectView
+from django.contrib.auth.decorators import login_required
+
 # from material.frontend import urls as frontend_urls
 xadmin.autodiscover()
 
@@ -22,6 +28,11 @@ urlpatterns = [
     path(r'', xadmin.site.urls),
     # url(r'^$', generic.RedirectView.as_view(url='/workflow/', permanent=False)),
     url(r'^printlogin/$', printLogin),
+]
+
+urlpatterns += [
+    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/static/images/favicon.ico')),
+    re_path(r'^media/(?P<path>.*)$', login_required(serve), kwargs={'document_root': settings.MEDIA_ROOT}),
 ]
 
 if settings.DEBUG:

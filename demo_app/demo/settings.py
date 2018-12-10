@@ -118,6 +118,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 MEDIA_URL='/media/'
+# MEDIA_ROOT='/home/user/media/'
+MEDIA_ROOT = os.path.join(SITE_ROOT)
+TEMPLATES[0]['OPTIONS']['context_processors'].append('django.template.context_processors.media')
 LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'Asia/Shanghai'

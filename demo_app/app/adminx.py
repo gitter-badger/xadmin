@@ -230,7 +230,7 @@ class ccpaAdmin(object):
         "name"
     ]
     # list_quick_filter = [{"field": "train", "limit": 10}]
-    exclude = ['status']
+    exclude = ['status','train']
     # free_query_filter = True
     # search_fields = ["train","name"]
     # relfield_style = "train"
@@ -247,6 +247,12 @@ class ccpaAdmin(object):
             return queryset
         queryset = queryset.filter(train=self.request.user)
         return queryset
+    def save_models(self):
+        # print('121212self.request', self.request,self)
+        flag = self.org_obj is None and 'create' or 'change'
+        if flag=='create':
+            self.new_obj.train_id = str(self.request.user.id)
+        super().save_models()
 
 @xadmin.sites.register(xss)
 class xssAdmin(object):
