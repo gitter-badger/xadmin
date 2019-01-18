@@ -46,28 +46,28 @@ class MaintainInline(object):
     style = "accordion"
 
 #
-# @xadmin.sites.register(kmChoices)
-# class kmChoicesAdmin(object):
-#     list_display = ("description")
-#     list_display_links = ("description",)
-# #     wizard_form_list = [
-# #         ("First's Form", ("name", "description")),
-# #         ("Second Form", ("contact", "telphone", "address")),
-# #         ("Thread Form", ("customer_id",))
-# #     ]
-# #     search_fields = [ "description"]
-# #     list_filter = [
-# #         "description"
-# #     ]
-# #     list_quick_filter = [{"field": "description", "limit": 10}]
-# #
-# #     search_fields = ["description"]
-# #     relfield_style = "fk-select"
-# #     reversion_enable = True
-# #
-# #     actions = [BatchChangeAction, ]
-# #     batch_fields = ("description")
+@xadmin.sites.register(kmChoices)
+class kmChoicesAdmin(object):
+    list_display = ("description",)
+    list_display_links = ("description",)
+#     wizard_form_list = [
+#         ("First's Form", ("name", "description")),
+#         ("Second Form", ("contact", "telphone", "address")),
+#         ("Thread Form", ("customer_id",))
+#     ]
+#     search_fields = [ "description"]
+#     list_filter = [
+#         "description"
+#     ]
+#     list_quick_filter = [{"field": "description", "limit": 10}]
 #
+#     search_fields = ["description"]
+#     relfield_style = "fk-select"
+#     reversion_enable = True
+#
+#     actions = [BatchChangeAction, ]
+#     batch_fields = ("description")
+
 # @xadmin.sites.register(IDC)
 # class IDCAdmin(object):
 #     list_display = ("name", "description", "create_time", "contact", "telphone", "address", "customer_id")
