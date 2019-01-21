@@ -299,6 +299,96 @@ class xss(models.Model):
         # )
 
 
+@python_2_unicode_compatible
+class fund(models.Model):
+    # UPLOAD_PATH_IMAGE = 'upload/image/'
+
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
+
+
+@python_2_unicode_compatible
+class treatment_item(models.Model):
+    # UPLOAD_PATH_IMAGE = 'upload/image/'
+
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
+
+@python_2_unicode_compatible
+class customer(models.Model):
+    # UPLOAD_PATH_IMAGE = 'upload/image/'
+
+    first_name = models.CharField(max_length=64)
+    # train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
+    last_name = models.CharField(max_length=64)
+    date_of_birth = models.DateField(verbose_name=u'birthday')
+    contact_number = models.CharField(max_length=20)
+    health_fund = models.ForeignKey(fund, on_delete=models.CASCADE,blank=True, null=True)
+    health_fund_number = models.CharField(max_length=64,blank=True, null=True)
+
+    def __str__(self):
+        return self.first_name
+
+    # def get_card_no(self):
+    #     return self.id
+
+    class Meta:
+        verbose_name = u"customer"
+        verbose_name_plural = verbose_name
+
+
+@python_2_unicode_compatible
+class provider(models.Model):
+    # UPLOAD_PATH_IMAGE = 'upload/image/'
+
+    first_name = models.CharField(max_length=64)
+    # train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
+    last_name = models.CharField(max_length=64)
+    # contact_number = models.CharField(max_length=20)
+    health_fund = models.ForeignKey(fund, on_delete=models.CASCADE)
+    health_fund_number = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.first_name#+' '+self.last_name
+
+    # def get_card_no(self):
+    #     return self.id
+
+    class Meta:
+        verbose_name = u"provider"
+        verbose_name_plural = verbose_name
+
+
+@python_2_unicode_compatible
+class treatment(models.Model):
+    # UPLOAD_PATH_IMAGE = 'upload/image/'
+
+    cust = models.ForeignKey(customer, on_delete=models.CASCADE, verbose_name="customer")
+    date = models.DateTimeField( auto_now_add=True)
+    # train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
+    item = models.ForeignKey(treatment_item, on_delete=models.CASCADE)
+
+    prov = models.ForeignKey(provider, on_delete=models.CASCADE, verbose_name="provider")
+    # contact_number = models.CharField(max_length=20)
+    hicaps = models.DecimalField(max_digits=10, decimal_places=2)
+    cash = models.DecimalField(max_digits=10, decimal_places=2)
+    minute = models.IntegerField()
+
+    def __str__(self):
+        return str(self.id)#+' '+self.last_name
+
+    def cost(self):
+        return str(self.hicaps+self.cash)
+
+    class Meta:
+        verbose_name = u"treatment"
+        verbose_name_plural = verbose_name
+
+
 # @python_2_unicode_compatible
 # class xsstest(Process):
 #     # UPLOAD_PATH_IMAGE = 'upload/image/'

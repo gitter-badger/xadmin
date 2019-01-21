@@ -10,6 +10,7 @@ from xadmin.views.base import BaseAdminPlugin, BaseAdminView, csrf_protect_m
 from xadmin.views.website import LoginView
 
 
+
 class ResetPasswordSendView(BaseAdminView):
 
     need_site_permission = False
@@ -61,7 +62,7 @@ class ResetLinkPlugin(BaseAdminPlugin):
 
     def block_form_bottom(self, context, nodes):
         reset_link = self.get_admin_url('xadmin_password_reset')
-        return '<div class="text-info" style="margin-top:15px;"><a href="%s"><i class="fa fa-question-sign"></i> %s</a><a href="/printlogin/"><i class="fa fa-question-sign"></i> 学生查询入口</a></div>' % (reset_link, _('Forgotten your password or username?'))
+        return ''#'<div class="text-info" style="margin-top:15px;"><a href="%s"><i class="fa fa-question-sign"></i> %s</a><a href="/printlogin/"><i class="fa fa-question-sign"></i> 学生查询入口</a></div>' % (reset_link, _('Forgotten your password or username?'))
 
 
 site.register_plugin(ResetLinkPlugin, LoginView)
@@ -82,7 +83,7 @@ class ResetPasswordComfirmView(BaseAdminView):
                                       token_generator=self.password_reset_token_generator,
                                       set_password_form=self.password_reset_set_form,
                                       post_reset_redirect=self.get_admin_url('xadmin_password_reset_complete'),
-                                      current_app=self.admin_site.name, extra_context=context)
+                                      current_app=self.admin_site.name)
 
     def get(self, request, uidb36, token, *args, **kwargs):
         return self.do_view(request, uidb36, token)

@@ -24,7 +24,41 @@
   {% view_block 'before_fieldsets' %}
 
   {% crispy form %}
+    <!--afeiafei&#45;&#45;{{ opts.object_name.lower }}-->
+    {% if 'treatment' in opts.object_name.lower %}
+    <div style="text-align: left;">
+        <label  class="control-label large " style="color: red" id="cost_id">Cost: </label>
+    </div>
 
+    <script>
+
+            function sumcost() {
+                var hicaps = 0.0;
+                if($("#id_hicaps").val()){
+                    hicaps = parseFloat($("#id_hicaps").val());
+                }
+                var cash = 0.0;
+                if($("#id_cash").val()){
+                    cash = parseFloat($("#id_cash").val());
+                }
+                // console.log("hicaps"+hicaps+"cash"+cash);
+                var costsum = hicaps+cash;
+                $("#cost_id").text('Cost:'+costsum);
+            }
+        //输入框的值改变时触发
+            $("#id_hicaps").on("input",function(e){
+                //获取input输入的值
+                // console.log(e.delegateTarget.value);
+                sumcost()
+            });
+
+            $("#id_cash").on("input",function(e){
+                //获取input输入的值
+                // console.log(e.delegateTarget.value);
+                sumcost()
+            });
+    </script>
+    {% endif %}
   {% view_block 'after_fieldsets' %}
 
   {% block submit_buttons_bottom %}{% include "xadmin/includes/submit_line.html" %}{% endblock %}
