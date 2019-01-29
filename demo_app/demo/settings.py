@@ -121,13 +121,17 @@ MEDIA_URL='/media/'
 # MEDIA_ROOT='/home/user/media/'
 MEDIA_ROOT = os.path.join(SITE_ROOT)
 TEMPLATES[0]['OPTIONS']['context_processors'].append('django.template.context_processors.media')
-LANGUAGE_CODE = 'zh-hans'
+LANGUAGE_CODE = 'en-AU'#'zh-hans'en-us
 
-TIME_ZONE = 'Asia/Shanghai'
+TIME_ZONE = 'Australia/Canberra'#'Asia/Shanghai' America/Chicago
 
 USE_I18N = True
+USE_L10N = True#FalseTrue
+# DATETIME_FORMAT = 'd/m/Y H:i:s'
+#
+# DATE_FORMAT = 'd/m/Y' #日/月/年
 
-USE_L10N = True
+# USE_L10N = True
 
 USE_TZ = True
 
@@ -137,7 +141,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-if DEBUG:
+if DEBUG and 1==2:
     # django debug toolbar
     INSTALLED_APPS.append('debug_toolbar')
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')

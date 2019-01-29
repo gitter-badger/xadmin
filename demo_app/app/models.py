@@ -331,7 +331,10 @@ class customer(models.Model):
     health_fund_number = models.CharField(max_length=64,blank=True, null=True)
 
     def __str__(self):
-        return self.first_name
+        return self.first_name+' '+self.last_name
+
+    def fullname(self):
+        return self.first_name+' '+self.last_name
 
     # def get_card_no(self):
     #     return self.id
@@ -353,7 +356,9 @@ class provider(models.Model):
     health_fund_number = models.CharField(max_length=64)
 
     def __str__(self):
-        return self.first_name#+' '+self.last_name
+        return self.first_name+' '+self.last_name+' '+str(self.health_fund)
+    def fullname(self):
+        return self.first_name+' '+self.last_name
 
     # def get_card_no(self):
     #     return self.id

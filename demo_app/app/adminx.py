@@ -347,7 +347,13 @@ class xssAdmin(object):
 class treatmentAdmin(object):
     list_display = ('cust',"date", "item","prov","minute", "hicaps", "cash", "cost")
     # list_editable = [ 'status']
-    list_printable = ['status']
+    list_printable = ['cust']
+    date_hierarchy = 'date'
+    # data_charts = {
+    #     "user_count": {'title': u"Treatment Report", "x-field": "date", "y-field": ("prov_count",),
+    #                    "order": ('date',)},
+    #     # "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)}
+    # }
     # list_display_links = ("name",)
     # wizard_form_list = [
     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
@@ -386,9 +392,9 @@ class treatmentAdmin(object):
 
 @xadmin.sites.register(customer)
 class customerAdmin(object):
-    list_display = ('first_name',"last_name","date_of_birth","contact_number", "health_fund", "health_fund_number")
-    # list_editable = [ 'status']
-    # list_printable = ['status']
+    list_display = ('fullname',"date_of_birth","contact_number", "health_fund", "health_fund_number")
+    # list_editable = [ 'status'] 'first_name','last_name',
+    # list_printable = ['fullname']
     # list_display_links = ("name",)
     # wizard_form_list = [
     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
@@ -413,9 +419,9 @@ class customerAdmin(object):
 
 @xadmin.sites.register(provider)
 class providerAdmin(object):
-    list_display = ('first_name',"last_name", "health_fund", "health_fund_number")
+    list_display = ('fullname', "health_fund", "health_fund_number")
     # list_editable = [ 'status']
-    # list_printable = ['status']
+    list_printable = ['health_fund_number']
     # list_display_links = ("name",)
     # wizard_form_list = [
     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),

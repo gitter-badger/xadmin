@@ -5,7 +5,7 @@ from .base import BaseAdminPlugin, BaseAdminView, CommAdminView, ModelAdminView,
 from .list import ListAdminView
 from .edit import CreateAdminView, UpdateAdminView, ModelFormAdminView
 from .delete import DeleteAdminView
-from .detail import DetailAdminView,PrintAdminView
+from .detail import DetailAdminView, PrintAdminView, Print1AdminView
 from .form import FormAdminView
 from .dashboard import Dashboard, BaseWidget, widget_manager, ModelDashboard
 from .website import IndexView, LoginView, LogoutView, UserSettingView,PrintLoginView
@@ -40,6 +40,8 @@ def register_builtin_views(site):
         r'^(.+)/detail/$', DetailAdminView, name='%s_%s_detail')
     site.register_modelview(
         r'^(.+)/print/$', PrintAdminView, name='%s_%s_print')
+    site.register_modelview(
+        r'^(.+)/print1/$', Print1AdminView, name='%s_%s_print')
     site.register_modelview(
         r'^(.+)/dashboard/$', ModelDashboard, name='%s_%s_dashboard')
 

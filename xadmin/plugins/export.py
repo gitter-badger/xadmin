@@ -99,7 +99,7 @@ class ExportPlugin(BaseAdminPlugin):
         sheet = book.add_worksheet(
             u"%s %s" % (_(u'Sheet'), force_text(model_name)))
         styles = {'datetime': book.add_format({'num_format': 'yyyy-mm-dd hh:mm:ss'}),
-                  'date': book.add_format({'num_format': 'yyyy-mm-dd'}),
+                  'date': book.add_format({'num_format': 'dd/mm/yyyy'}),#'yyyy-mm-dd'
                   'time': book.add_format({'num_format': 'hh:mm:ss'}),
                   'header': book.add_format({'font': 'name Times New Roman', 'color': 'red', 'bold': 'on', 'num_format': '#,##0.00'}),
                   'default': book.add_format()}
@@ -136,7 +136,7 @@ class ExportPlugin(BaseAdminPlugin):
         sheet = book.add_sheet(
             u"%s %s" % (_(u'Sheet'), force_text(model_name)))
         styles = {'datetime': xlwt.easyxf(num_format_str='yyyy-mm-dd hh:mm:ss'),
-                  'date': xlwt.easyxf(num_format_str='yyyy-mm-dd'),
+                  'date': xlwt.easyxf(num_format_str='dd/mm/yyyy'),
                   'time': xlwt.easyxf(num_format_str='hh:mm:ss'),
                   'header': xlwt.easyxf('font: name Times New Roman, color-index red, bold on', num_format_str='#,##0.00'),
                   'default': xlwt.Style.default_style}

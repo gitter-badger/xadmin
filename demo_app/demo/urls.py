@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 # Uncomment the next two lines to enable the admin:
 import xadmin
 from django.views import generic
-from app.views import printLogin
+from app.views import printLogin,printLogin1,printLogin2
 from django.urls import re_path
 from django.conf import settings
 from django.views.static import serve
@@ -28,6 +28,8 @@ urlpatterns = [
     path(r'', xadmin.site.urls),
     # url(r'^$', generic.RedirectView.as_view(url='/workflow/', permanent=False)),
     url(r'^printlogin/$', printLogin),
+    url(r'^printlogin1/(\d+)$', printLogin1),
+    url(r'^printlogin2/(\d+)$', printLogin2),
 ]
 
 urlpatterns += [

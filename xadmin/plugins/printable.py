@@ -36,8 +36,9 @@ class PrintablePlugin(BaseAdminPlugin):
         return active
 
     def result_item(self, item, obj, field_name, row):
-        print('afeiafeiafei1314',item.field)
-        if self.list_printable and item.field and (field_name in self.list_printable) and '通过'==item.value:
+        print('afeiafeiafei1314',item.field,item.value,field_name)
+        print('afeiafeiafei1314aaaa:',field_name)
+        if self.list_printable and item.field and (field_name in self.list_printable) and ('通过'==item.value or '草稿'!=item.value):
             pk = getattr(obj, obj._meta.pk.attname)
             field_label = label_for_field(field_name, obj,
                                           model_admin=self.admin_view,
@@ -60,16 +61,22 @@ class PrintablePlugin(BaseAdminPlugin):
                 #     '%s:%s_%s_detail' % (self.admin_site.app_name,
                 #                          'demo', opts.model_name),
                 #     item.field)
-                item_res_uri=str(obj.id)+'/print'
+                item_res_uri=str(obj.id)+'/print1'
                 print('item_res_uri',item_res_uri)
                 if item_res_uri:
                     # edit_url = reverse(
                     #     '%s:%s_%s_change' % (self.admin_site.app_name, 'demo', opts.model_name),
                     #     item.field)
                     edit_url='1212'
-                    item.btns.append(
-                        '<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s"><i class="fa fa-print"></i></a>'
-                        % (item_res_uri, edit_url, _(u'Details of %s') % str(rel_obj)))
+                    if field_name == 'health_fund_number':
+                        item.btns.append(
+                            '<a  href="/printlogin2/%s"  target="_blank" title="%s"><i class="fa fa-print"></i></a>'
+                            % (str(obj.id), _(u'Details of %s') % str(rel_obj)))
+                    else:
+                        item.btns.append(
+                            '<a  href="/printlogin1/%s"  target="_blank" title="%s"><i class="fa fa-print"></i></a>'
+                            % (str(rel_obj), _(u'Details of %s') % str(rel_obj)))
+                    # print('item_res_uri121212121212', item_res_uri)
             except NoReverseMatch:
                 pass
 
