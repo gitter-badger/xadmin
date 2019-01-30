@@ -36,33 +36,52 @@
         <div class="arrow"></div>
         <div class="popover-content row">
           <script>
+            $(document).ready(function(){
+              var datastr = $('.start_input').val();
+              if(datastr.substring(0,3)=='201' || datastr.substring(0,3)=='202'){
+                  // alert(datastr);//2019-01-09
+                  var newstr = datastr.substring(8,10)+'/'+datastr.substring(5,7)+'/'+datastr.substring(0,4);
+                  // alert(newstr);
+                  $('.start_input').val(newstr);
+              }
+              var enddatastr = $('.end_input').val();
+              if(enddatastr.substring(0,3)=='201' || enddatastr.substring(0,3)=='202'){
+                  // alert(datastr);//2019-01-09
+                  var newstr = enddatastr.substring(8,10)+'/'+enddatastr.substring(5,7)+'/'+enddatastr.substring(0,4);
+                  // alert(newstr);
+                  $('.end_input').val(newstr);
+              }
+            });
             function check(){
                 // alert("start_input {{since_name}} end_input {{until_name}}");
                 //start_input {{since_val}} end_input {{until_name}}
                 //start_input _p_date__gte end_input _p_date__lt
                 var since_name="{{since_name}}";
+                var until_name11="{{until_name}}";
                 var form_since = $('.start_input').val(); //24/07/2019
                 var form_since1 = form_since.substring(6,10)+'-'+form_since.substring(3,5)+'-'+form_since.substring(0,2);
                 var until_name = $('.end_input').val(); //24/07/2019
                 var until_name1 = until_name.substring(6,10)+'-'+until_name.substring(3,5)+'-'+until_name.substring(0,2);
-                alert(form_since1+'--'+until_name1);
-//onsubmit="return check()"
+                // alert(form_since1+'--'+until_name1);
+                $('input[name='+since_name+']').val(form_since1);
+                $('input[name='+until_name11+']').val(until_name1);
+                // alert($('input[name='+since_name+']').val());
                 // alert($('.start_input').val());//$('input[name:'+since_name+']').val()
                 // alert($('input[name='+since_name+']').val());
                 return true;
             }
           </script>
-        <form method="get" action="" class="clearfix"  >
+        <form method="get" action="" class="clearfix"  onsubmit="return check()">
           <div class="ranges col-sm-3 hide-xs">
             <fieldset class="range_inputs">
               <h4>{% trans "Select Date" %}</h4>
               <label for="{{since_name}}">{% trans "From" %}</label>
 
-              <input class="form-control start_input" type="text"  name="{{since_name}}"  value="{{since_val}}" />
-              <!--<input type="hidden" name="{{since_name}}" value="{{since_val}}" />-->
+              <input class="form-control start_input" type="text"  value="{{since_val}}" />
+              <input type="hidden" name="{{since_name}}" value="{{since_val}}" />
               <label for="{{until_name}}">{% trans "To" %}</label>
-              <input class="form-control end_input" type="text" name="{{until_name}}" value="{{until_val}}" />
-              <!--<input type="hidden" name="{{until_name}}" value="{{until_val}}" />-->
+              <input class="form-control end_input" type="text"  value="{{until_val}}" />
+              <input type="hidden" name="{{until_name}}" value="{{until_val}}" />
               <button type="submit" class="btn btn-success btn-block">{% trans "Apply" %}</button>
             </fieldset>
           </div>

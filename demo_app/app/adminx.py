@@ -348,6 +348,7 @@ class treatmentAdmin(object):
     list_display = ('cust',"date", "item","prov","minute", "hicaps", "cash", "cost")
     # list_editable = [ 'status']
     list_printable = ['cust']
+    list_Print = ('cust')
     date_hierarchy = 'date'
     # data_charts = {
     #     "user_count": {'title': u"Treatment Report", "x-field": "date", "y-field": ("prov_count",),
@@ -375,13 +376,21 @@ class treatmentAdmin(object):
     # batch_fields = ("name", "phone", "edu", "periods")
 
 
-    # def get_list_queryset(self):
-    #     print('self.request', self.request)
-    #     queryset = super().get_list_queryset()
-    #     if self.user.is_superuser:
-    #         return queryset
-    #     queryset = queryset.filter(train=self.request.user)
-    #     return queryset
+    def get_list_queryset(self):
+        print('self.request', self.request,self.request.GET.keys())
+        for i in self.request.GET.keys():
+            print(i,self.request.GET.get(i))
+            # self.request.GET[i]='121212'
+
+
+        # for i in self.request.GET.keys():
+        #     print(i,self.request.GET.get(i))
+
+        queryset = super().get_list_queryset()
+        # if self.user.is_superuser:
+        #     return queryset
+        # queryset = queryset.filter(train=self.request.user)
+        return queryset
     # def save_models(self):
     #     # print('121212self.request', self.request,self)
     #     flag = self.org_obj is None and 'create' or 'change'
@@ -421,7 +430,7 @@ class customerAdmin(object):
 class providerAdmin(object):
     list_display = ('fullname', "health_fund", "health_fund_number")
     # list_editable = [ 'status']
-    list_printable = ['health_fund_number']
+    # list_printable = ['health_fund_number']
     # list_display_links = ("name",)
     # wizard_form_list = [
     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),

@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 # Uncomment the next two lines to enable the admin:
 import xadmin
 from django.views import generic
-from app.views import printLogin,printLogin1,printLogin2
+from app.views import printLogin,printLogin1,printLogin2,printLogin3
 from django.urls import re_path
 from django.conf import settings
 from django.views.static import serve
@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^printlogin/$', printLogin),
     url(r'^printlogin1/(\d+)$', printLogin1),
     url(r'^printlogin2/(\d+)$', printLogin2),
+    url(r'^printlogin3/$', printLogin3),
 ]
 
 urlpatterns += [

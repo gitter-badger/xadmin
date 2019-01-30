@@ -128,7 +128,7 @@ TIME_ZONE = 'Australia/Canberra'#'Asia/Shanghai' America/Chicago
 USE_I18N = True
 USE_L10N = True#FalseTrue
 # DATETIME_FORMAT = 'd/m/Y H:i:s'
-#
+# #
 # DATE_FORMAT = 'd/m/Y' #日/月/年
 
 # USE_L10N = True

@@ -373,7 +373,7 @@ class treatment(models.Model):
     # UPLOAD_PATH_IMAGE = 'upload/image/'
 
     cust = models.ForeignKey(customer, on_delete=models.CASCADE, verbose_name="customer")
-    date = models.DateTimeField( auto_now_add=True)
+    date = models.DateTimeField( auto_now_add=True)#,input_formats=['%d/%m/%Y  %H:%M:%S','%d/%m/%Y  %H:%M:%S',
     # train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
     item = models.ForeignKey(treatment_item, on_delete=models.CASCADE)
 
