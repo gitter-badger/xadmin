@@ -2,10 +2,10 @@ import datetime
 from django.views.generic.detail import DetailView
 from django.shortcuts import render
 from django.utils import timezone
-from .models import xss,ccpa,treatment,provider
+from .models import xss,ccpa,treatment,provider,customer
 # Create your views here.
 from django.http import HttpResponse, Http404
-
+from django.core   import serializers
 def index(request):
     return HttpResponse("不要说话")
 
@@ -154,6 +154,12 @@ def printLogin3(request):
     print('relist',relist)
     return render(request, 'print_card3.html', {"qry": relist,'beginTime':beginTime,'endTime':endTime})
 
+def getbirthday(request):
+    nowm = datetime.datetime.now().strftime('%m')
+    nowd = datetime.datetime.now().strftime('%d')
+
+    json_data = serializers.serialize("json", customer.objects.filter(date_of_birth__month=nowm,date_of_birth__day=nowd).all()) #.filter(date_of_birth)
+    return HttpResponse(json_data, content_type="application/json")
 
 class TreatmentDetailView(DetailView):
     model = treatment  # 要显示详情内容的类

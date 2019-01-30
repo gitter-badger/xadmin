@@ -19,6 +19,61 @@
 
 {% block nav_btns %}
 {% if has_add_widget_permission %}
+
+<!-- 模态框（Modal） -->
+<script>
+    function dataf(enddatastr) {
+        return enddatastr.substring(8,10)+'/'+enddatastr.substring(5,7)+'/'+enddatastr.substring(0,4)
+    }
+  $(document).ready(function(){
+      // alert(1);
+        $.ajax({ url: "/getbirthday/", context: document.body, success: function(data){
+        // alert(data);
+                var htmlstr = '';
+                for(var i=0;i<data.length;i++){
+                htmlstr = htmlstr+'<tr><td>'+data[i].fields.first_name+' '+data[i].fields.last_name+'</td><td>'+dataf(data[i].fields.date_of_birth)+'</td><td>'+data[i].fields.contact_number+'</td></tr>';
+                }
+                if(htmlstr!=''){
+                    htmlstr = '<table class="table table-hover table-striped"> <tr>\n' +
+                        '      \n' +
+                        '      <th>Fullname</th>\n' +
+                        '      \n' +
+                        '      <th>birthday</th>\n' +
+                        '      \n' +
+                        '      <th>contact number</th>\n' +
+                        '    </tr>'+htmlstr+'</table>'
+                    $(".modal-body").html(htmlstr);
+                    $("#myModal").modal('show');
+                }
+      }});
+  })
+</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					Customer birthday
+				</h4>
+			</div>
+			<div class="modal-body">
+				No customer's birthday today
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">close
+				</button>
+				<!--<button type="button" class="btn btn-primary">-->
+					<!--提交更改-->
+				<!--</button>-->
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+</div>
+<a title="{% trans "birthday" %}" data-toggle="modal" data-target="#myModal" class="btn btn-primary">
+    <i class="fa fa-clock-o"></i> <span>{% trans "birthday" %}</span></a>
   <a title="{% trans "Add Widget" %}" href="{{ add_widget_url }}" class="btn btn-primary">
     <i class="fa fa-plus"></i> <span>{% trans "Add Widget" %}</span></a>
 {% endif %}
@@ -36,3 +91,4 @@
 </div>
 <input type='hidden' id='_portal_key' value='{{ portal_key }}' />
 {% endblock %}
+

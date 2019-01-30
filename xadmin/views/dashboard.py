@@ -574,9 +574,13 @@ class Dashboard(CommAdminView):
         return self.title
 
     @filter_hook
+    def get_birthList(self):
+        return []
+    @filter_hook
     def get_context(self):
         new_context = {
             'title': self.get_title(),
+            'birthList': self.get_birthList(),
             'icon': self.icon,
             'portal_key': self.get_portal_key(),
             'columns': [('col-sm-%d' % int(12 / len(self.widgets)), ws) for ws in self.widgets],

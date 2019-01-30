@@ -368,7 +368,7 @@ class treatmentAdmin(object):
     # list_quick_filter = [{"field": "train", "limit": 10}]
     # exclude = ['status','train']
     free_query_filter = True
-    search_fields = ["date", ]
+    search_fields = ['cust__contact_number',"date", ]
     # relfield_style = "train"
     reversion_enable = False
     list_export = ('xls',)
