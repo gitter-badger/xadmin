@@ -157,7 +157,7 @@ def printLogin3(request):
 def getbirthday(request):
     nowm = datetime.datetime.now().strftime('%m')
     nowd = datetime.datetime.now().strftime('%d')
-
+    print('nowm',nowm,'nowd',nowd)
     json_data = serializers.serialize("json", customer.objects.filter(date_of_birth__month=nowm,date_of_birth__day=nowd).all()) #.filter(date_of_birth)
     return HttpResponse(json_data, content_type="application/json")
 

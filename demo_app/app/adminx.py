@@ -29,15 +29,16 @@ from xadmin.plugins.batch import BatchChangeAction
 class BaseSetting(object):
     enable_themes = False
     use_bootswatch = False
+    # search_models = False
 
 
-# @xadmin.sites.register(views.CommAdminView)
-# class GlobalSetting(object):
-#     global_search_models = [Host, IDC]
-#     global_models_icon = {
-#         Host: "fa fa-laptop", IDC: "fa fa-cloud"
-#     }
-#     menu_style = 'default'  # 'accordion'
+@xadmin.sites.register(views.CommAdminView)
+class GlobalSetting(object):
+    global_search_models = []
+    # global_models_icon = {
+    #     Host: "fa fa-laptop", IDC: "fa fa-cloud"
+    # }
+    menu_style = 'default'  # 'accordion'
 
 
 class MaintainInline(object):
@@ -46,10 +47,10 @@ class MaintainInline(object):
     style = "accordion"
 
 #
-@xadmin.sites.register(kmChoices)
-class kmChoicesAdmin(object):
-    list_display = ("description",)
-    list_display_links = ("description",)
+# @xadmin.sites.register(kmChoices)
+# class kmChoicesAdmin(object):
+#     list_display = ("description",)
+#     list_display_links = ("description",)
 #     wizard_form_list = [
 #         ("First's Form", ("name", "description")),
 #         ("Second Form", ("contact", "telphone", "address")),
@@ -214,134 +215,134 @@ class kmChoicesAdmin(object):
 #     )
 #     reversion_enable = True
 
-@xadmin.sites.register(ccpa)
-class ccpaAdmin(object):
-    list_display = ('card_no',"name", "phone", "edu", "periods", "train", "area",'status')
-    list_editable = [ 'status']
-    list_printable = ['status']
-    # list_display_links = ("name",)
-    # wizard_form_list = [
-    #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
-    #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
-    #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
-    # ]
-    search_fields = ["name", "phone", "train", "area"]
-    list_filter = [
-        "name"
-    ]
-    # list_quick_filter = [{"field": "train", "limit": 10}]
-    exclude = ['status','train']
-    # free_query_filter = True
-    # search_fields = ["train","name"]
-    # relfield_style = "train"
-    reversion_enable = False
-    list_export = ('xls',)
-    actions = [BatchChangeAction, ]
-    batch_fields = ("name", "phone", "edu", "periods")
+# @xadmin.sites.register(ccpa)
+# class ccpaAdmin(object):
+#     list_display = ('card_no',"name", "phone", "edu", "periods", "train", "area",'status')
+#     list_editable = [ 'status']
+#     list_printable = ['status']
+#     # list_display_links = ("name",)
+#     # wizard_form_list = [
+#     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
+#     #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
+#     #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
+#     # ]
+#     search_fields = ["name", "phone", "train", "area"]
+#     list_filter = [
+#         "name"
+#     ]
+#     # list_quick_filter = [{"field": "train", "limit": 10}]
+#     exclude = ['status','train']
+#     # free_query_filter = True
+#     # search_fields = ["train","name"]
+#     # relfield_style = "train"
+#     reversion_enable = False
+#     list_export = ('xls',)
+#     actions = [BatchChangeAction, ]
+#     batch_fields = ("name", "phone", "edu", "periods")
+#
+#
+#     def get_list_queryset(self):
+#         print('self.request', self.request)
+#         queryset = super().get_list_queryset()
+#         if self.user.is_superuser:
+#             return queryset
+#         queryset = queryset.filter(train=self.request.user)
+#         return queryset
+#     def save_models(self):
+#         # print('121212self.request', self.request,self)
+#         flag = self.org_obj is None and 'create' or 'change'
+#         if flag=='create':
+#             self.new_obj.train_id = str(self.request.user.id)
+#         super().save_models()
 
-
-    def get_list_queryset(self):
-        print('self.request', self.request)
-        queryset = super().get_list_queryset()
-        if self.user.is_superuser:
-            return queryset
-        queryset = queryset.filter(train=self.request.user)
-        return queryset
-    def save_models(self):
-        # print('121212self.request', self.request,self)
-        flag = self.org_obj is None and 'create' or 'change'
-        if flag=='create':
-            self.new_obj.train_id = str(self.request.user.id)
-        super().save_models()
-
-@xadmin.sites.register(xss)
-class xssAdmin(object):
-    list_display = ("card_no","name","phone", "edu", "periods", "train", "area","status")
-    list_printable = [ 'status']
-    list_editable = ['status']
-    # list_display_links = ("name",)
-    # wizard_form_list = [
-    #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
-    #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
-    #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
-    # ]
-    search_fields = ["name", "phone"]
-    list_filter = [
-        "name"
-    ]
-    exclude = ['status','train']
-    # inlines = ['status']
-
-    # list_quick_filter = [{"field": "train", "limit": 10}]
-    # free_query_filter = True
-    # search_fields = ["train","name"]
-    # relfield_style = "train"
-    reversion_enable = False
-    list_export = ('xls',)
-    actions = [BatchChangeAction, ]
-    batch_fields = ("name", "phone", "edu", "periods")
-
-    # def status_view(self, obj):
-    #     return obj.status
-
-    def get_list_queryset(self):
-        print('self.request', self.request)
-        queryset = super().get_list_queryset()
-        print('self.queryset', self.queryset)
-        if self.user.is_superuser:
-            return queryset
-        queryset = queryset.filter(train=self.request.user)
-        return queryset
-
-    def save_models(self):
-        # print('121212self.request', self.request,self)
-        flag = self.org_obj is None and 'create' or 'change'
-        if flag=='create':
-            self.new_obj.train_id = str(self.request.user.id)
-        super().save_models()
-
-    # def get_form_datas(self):
-    #     print('self.request', self.request)
-    #     queryset = super().get_form_datas()
-    #     print('queryset', queryset)
-    #     return queryset
-
-    # def get_context(self):
-    #     new_context = {
-    #         'card_no': ('Add %s') % '12',
-    #     }
-    #     context = super().get_context()
-    #     context.update(new_context)
-    #     print('context',context)
-    #     return context
-
-    # def result_item(self):
-    #     print('result_item0')
-    #     return super().result_item()
-        # queryset = super().result_item(self)
-        # print('queryset')
-        # return queryset
-
-
-    # def get_form_datas(self):
-    #     queryset = super().get_form_datas()
-    #     print('get_form_datas', queryset) #,queryset['instance'].status 新数据无instance
-    #     return queryset
-        # data = {'initial': self.get_initial_data()}
-        # if self.request_method == 'get':
-        #     data['initial'].update(self.request.GET)
-        # else:
-        #     data.update({'data': self.request.POST, 'files': self.request.FILES})
-        # return data
-
-    # def queryset(self):
-    #
-    #     """函数作用：使当前登录的用户只能看到自己负责的服务器"""
-    #     # qs = super(ccpaAdmin, self).queryset(self)
-    #     return super(ccpaAdmin, self).queryset(self)
-        # if request.user.is_superuser:
-        #     return qs
-        # return qs.filter(user=ccpa.objects.filter(train_name=request.user))
+# @xadmin.sites.register(xss)
+# class xssAdmin(object):
+#     list_display = ("card_no","name","phone", "edu", "periods", "train", "area","status")
+#     list_printable = [ 'status']
+#     list_editable = ['status']
+#     # list_display_links = ("name",)
+#     # wizard_form_list = [
+#     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
+#     #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
+#     #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
+#     # ]
+#     search_fields = ["name", "phone"]
+#     list_filter = [
+#         "name"
+#     ]
+#     exclude = ['status','train']
+#     # inlines = ['status']
+#
+#     # list_quick_filter = [{"field": "train", "limit": 10}]
+#     # free_query_filter = True
+#     # search_fields = ["train","name"]
+#     # relfield_style = "train"
+#     reversion_enable = False
+#     list_export = ('xls',)
+#     actions = [BatchChangeAction, ]
+#     batch_fields = ("name", "phone", "edu", "periods")
+#
+#     # def status_view(self, obj):
+#     #     return obj.status
+#
+#     def get_list_queryset(self):
+#         print('self.request', self.request)
+#         queryset = super().get_list_queryset()
+#         print('self.queryset', self.queryset)
+#         if self.user.is_superuser:
+#             return queryset
+#         queryset = queryset.filter(train=self.request.user)
+#         return queryset
+#
+#     def save_models(self):
+#         # print('121212self.request', self.request,self)
+#         flag = self.org_obj is None and 'create' or 'change'
+#         if flag=='create':
+#             self.new_obj.train_id = str(self.request.user.id)
+#         super().save_models()
+#
+#     # def get_form_datas(self):
+#     #     print('self.request', self.request)
+#     #     queryset = super().get_form_datas()
+#     #     print('queryset', queryset)
+#     #     return queryset
+#
+#     # def get_context(self):
+#     #     new_context = {
+#     #         'card_no': ('Add %s') % '12',
+#     #     }
+#     #     context = super().get_context()
+#     #     context.update(new_context)
+#     #     print('context',context)
+#     #     return context
+#
+#     # def result_item(self):
+#     #     print('result_item0')
+#     #     return super().result_item()
+#         # queryset = super().result_item(self)
+#         # print('queryset')
+#         # return queryset
+#
+#
+#     # def get_form_datas(self):
+#     #     queryset = super().get_form_datas()
+#     #     print('get_form_datas', queryset) #,queryset['instance'].status 新数据无instance
+#     #     return queryset
+#         # data = {'initial': self.get_initial_data()}
+#         # if self.request_method == 'get':
+#         #     data['initial'].update(self.request.GET)
+#         # else:
+#         #     data.update({'data': self.request.POST, 'files': self.request.FILES})
+#         # return data
+#
+#     # def queryset(self):
+#     #
+#     #     """函数作用：使当前登录的用户只能看到自己负责的服务器"""
+#     #     # qs = super(ccpaAdmin, self).queryset(self)
+#     #     return super(ccpaAdmin, self).queryset(self)
+#         # if request.user.is_superuser:
+#         #     return qs
+#         # return qs.filter(user=ccpa.objects.filter(train_name=request.user))
 
 @xadmin.sites.register(treatment)
 class treatmentAdmin(object):
@@ -368,7 +369,7 @@ class treatmentAdmin(object):
     # list_quick_filter = [{"field": "train", "limit": 10}]
     # exclude = ['status','train']
     free_query_filter = True
-    search_fields = ['cust__contact_number',"date", ]
+    search_fields = ['cust__contact_number','cust__first_name','cust__last_name',"date", ]
     # relfield_style = "train"
     reversion_enable = False
     list_export = ('xls',)
@@ -417,7 +418,7 @@ class customerAdmin(object):
     # list_quick_filter = [{"field": "train", "limit": 10}]
     # exclude = ['status','train']
     # free_query_filter = True
-    # search_fields = ["train","name"]
+    search_fields = ["contact_number",'first_name',"last_name", "health_fund_number"]
     # relfield_style = "train"
     reversion_enable = False
     list_export = ('xls',)

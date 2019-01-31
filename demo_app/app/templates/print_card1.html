@@ -64,67 +64,88 @@
                                    style="border-collapse:separate; border-spacing:20px 0px;">
                                 <tr>
                                     <td width="80%">
-                                        <h2 align="center">body heaven massage</h2>
-                                        <h5 align="center">ABN: 36 159 854 707</h5>
-                                        <h5 align="right">Address: Shop 1132 Body Haven Massage <br>211 Lake Entrance Road, <br>Shellharbour, NSW, 2529</h5>
-                                        <h5 align="right">Tel: 02 4296 3503</h5>
+                                        <h2 align="left">Body Heaven Massage</h2>
+                                        <h1 align="right">TAX INVOICE</h1>
+                                        <h5 align="right">ABN: 36 159 854 707</h5>
+                                        <h5 align="right">Date Issued: {{qry.date}}</h5>
+                                        <!--<h5 align="right">Address: Shop 1132 Body Haven Massage <br>211 Lake Entrance Road, <br>Shellharbour, NSW, 2529</h5>-->
+                                        <!--<h5 align="right">Tel: 02 4296 3503</h5>-->
                                         <br>
-                                        <hr>
+                                        <!--<hr>-->
+                                        <!--<h5 align="right">Provider Details:</h5>-->
                                         <table>
                                             <tr>
                                                 <td width="60%">
                                                     <table width="100%" height="100" border="0" class="zcsj">
                                                         <tr>
-                                                            <td>provider name：</td>
-                                                            <td><u style="min-width: 200px">{{qry.prov.fullname}}</u></td>
+                                                            <th colspan="2" align="center">Provider Details:</th><th>Client Details:</th>
                                                         </tr>
                                                         <tr>
-                                                            <td>provider number：</td>
-                                                            <td><u style="min-width: 200px">{{qry.prov.health_fund_number}}</u></td>
+                                                            <td>Provider Name：</td>
+                                                            <td>{{qry.prov.fullname}}</td>
+
+                                                            <td align="center">{{qry.cust.fullname}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Provider Number：</td>
+                                                            <td>{{qry.prov.health_fund_number}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Address：</td>
+                                                            <td>Shop 1132 Body Haven Massage 211 <br>Lake Entrance Road, Shellharbour, NSW, 2529</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Phone：</td>
+                                                            <td>02 4296 3503</td>
                                                         </tr>
                                                     </table>
                                                 </td>
                                             </tr>
                                         </table>
 
-                                                  <hr>
+                                                  <!--<hr>-->
 
-                                        <table>
+                                        <table width="100%"  border="1"  cellspacing="0">
                                             <tr>
-                                                <td width="60%">
-                                                    <table width="100%" height="100" border="0" class="zcsj">
+                                                <th>Date</th><th>Service Description</th><th>Amount</th>
+                                            </tr>
+                                            <tr>
+                                                <!--<td width="60%">-->
+                                                    <!--<table width="100%" height="100" border="0" class="zcsj">-->
                                                         <tr>
-                                                            <td>customer name：</td>
-                                                            <td><u style="min-width: 200px">{{qry.cust.fullname}}</u></td>
+                                                            <td  align="center">{{qry.date}}</td>
+                                                            <td  align="center">{{qry.item.name}}</td>
+                                                            <td align="center">${{qry.cost}}</td>
                                                         </tr>
                                                         <!--<tr>-->
                                                             <!--<td>provider number：</td>-->
                                                             <!--<td><u style="min-width: 200px">{{qry.prov.health_fund_number}}</u></td>-->
                                                         <!--</tr>-->
-                                                    </table>
-                                                </td>
+                                                    <!--</table>-->
+                                                <!--</td>-->
                                             </tr>
                                         </table>
+                                        <h5 align="right">Total Amount(GST Incl.)      <span style="font-size: 20">${{qry.cost}}</span></h5>
 
+                                        <h5 align="right"><u style="width: 200px;font-size: 20">{{qry.prov.fullname}}</u></h5>
+                                                  <!--<hr>-->
 
-                                                  <hr>
-
-                                        <table>
-                                            <tr>
-                                                <td width="60%">
-                                                    <table width="100%" height="100" border="0" class="zcsj">
-                                                        <tr>
-                                                            <td>Treatment item：</td>
-                                                            <td><u style="min-width: 200px">{{qry.item.name}}</u></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Cost：</td>
-                                                            <td><u style="min-width: 200px">A${{qry.cost}}</u></td>
-                                                        </tr>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                        <!--<table>-->
+                                            <!--<tr>-->
+                                                <!--<td width="60%">-->
+                                                    <!--<table width="100%" height="100" border="0" class="zcsj">-->
+                                                        <!--<tr>-->
+                                                            <!--<td>Treatment item：</td>-->
+                                                            <!--<td><u style="min-width: 200px">{{qry.item.name}}</u></td>-->
+                                                        <!--</tr>-->
+                                                        <!--<tr>-->
+                                                            <!--<td>Cost：</td>-->
+                                                            <!--<td><u style="min-width: 200px">A${{qry.cost}}</u></td>-->
+                                                        <!--</tr>-->
+                                                    <!--</table>-->
+                                                <!--</td>-->
+                                            <!--</tr>-->
+                                        <!--</table>-->
 
                                     </td>
 
