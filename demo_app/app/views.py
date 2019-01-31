@@ -47,6 +47,7 @@ def printLogin1(request,tid):
 
     print('request',request,tid)
     q = treatment.objects.get(id=tid)
+    q.date=q.date.strftime("%d/%m/%Y")
     return render(request, 'print_card1.html', {"qry": q,'verbose_name':'薪税师项目'})
     return HttpResponse(int(tid))
     if request.method == "POST":
