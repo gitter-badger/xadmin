@@ -117,9 +117,14 @@ def printLogin3(request):
         relist = request.POST.get('tongjitable1')
         # relist =(list)relist
         print('tongjitablename',relist)
+        relistnew = eval(relist)
+        total = 0
+        for ab in relistnew:
+            total = total + ab['num']
+        print('relist', relist, total)
         beginTime = request.POST.get('_p_date__gte')
         endTime = request.POST.get('_p_date__lt')
-        return render(request, 'print_card3.html', {"qry": eval(relist), 'beginTime': beginTime, 'endTime': endTime})
+        return render(request, 'print_card3.html', {"qry": relistnew, 'beginTime': beginTime, 'endTime': endTime,'total':total})
     # print('request',request,tid)
     # p = provider.objects.get(id=tid)
     cur_time = datetime.datetime.now()  # 如果数据库保存的是UTC时间,程序不会蹦但是会提示你这不是本地时间
@@ -141,6 +146,7 @@ def printLogin3(request):
     # q = treatment.objects.raw('select prov_id,count(1) from app_treatment where date>'+strTime+' group by prov_id')
     print('q',q)
     relist = []
+
     for i in q:
         # j = i.prov.objects
         hasflag = 0
@@ -152,8 +158,7 @@ def printLogin3(request):
         if hasflag==0:
             pnum = {'name': i.prov.fullname(), 'num': 1}
             relist.append(pnum)
-    print('relist',relist)
-    return render(request, 'print_card3.html', {"qry": relist,'beginTime':beginTime,'endTime':endTime})
+    return render(request, 'print_card3.html', {"qry": relist,'beginTime':beginTime,'endTime':endTime,'total':total})
 
 def getbirthday(request):
     nowm = datetime.datetime.now().strftime('%m')
