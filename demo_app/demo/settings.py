@@ -164,7 +164,7 @@ DEFAULT_FROM_EMAIL = 'guocdfeifei@163.com'       #用户收到邮件显示的邮
 
 EMAIL_HOST_USER = 'guocdfeifei@163.com'       #我自己的邮箱
 
-EMAIL_HOST_PASSWORD = 'guoffv5b7'                  #我的邮箱密码
+EMAIL_HOST_PASSWORD = 'guoffv511b71'                  #我的邮箱密码
 
 EMAIL_SUBJECT_PREFIX = u'[lybbn]'            #为邮件Subject-line前缀,默认是'[django]'
 

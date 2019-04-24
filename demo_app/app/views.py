@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from .models import xss,ccpa,treatment,provider,customer
 # Create your views here.
+from django.conf import settings
 from django.http import HttpResponse, Http404
 from django.core   import serializers
 def index(request):
@@ -47,7 +48,10 @@ def printLogin1(request,tid):
 
     print('request',request,tid)
     q = treatment.objects.get(id=tid)
-    q.date=q.date.strftime("%d/%m/%Y")
+    q.date1=q.date.strftime("%d/%m/%Y")
+    q.date2=q.date.strftime(" %d/%b/%Y %H:%M:%S")
+    import pytz
+    q.date = q.date.astimezone(pytz.timezone(settings.TIME_ZONE)).strftime("%d/%m/%Y")
     return render(request, 'print_card1.html', {"qry": q,'verbose_name':'薪税师项目'})
     return HttpResponse(int(tid))
     if request.method == "POST":

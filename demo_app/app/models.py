@@ -330,6 +330,7 @@ class customer(models.Model):
     health_fund = models.ForeignKey(fund, on_delete=models.CASCADE,blank=True, null=True)
     health_fund_number = models.CharField(max_length=64,blank=True, null=True)
 
+
     def __str__(self):
         return self.first_name+' '+self.last_name
 
@@ -353,7 +354,7 @@ class provider(models.Model):
     last_name = models.CharField(max_length=64)
     # contact_number = models.CharField(max_length=20)
     health_fund = models.ForeignKey(fund, on_delete=models.CASCADE)
-    health_fund_number = models.CharField(max_length=64)
+    health_fund_number = models.CharField(max_length=64,verbose_name=u'provider number')
 
     def __str__(self):
         return self.first_name+' '+self.last_name+' '+str(self.health_fund)
