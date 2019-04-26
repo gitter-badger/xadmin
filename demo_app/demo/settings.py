@@ -90,8 +90,14 @@ WSGI_APPLICATION = 'demo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'lilv',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 
@@ -121,9 +127,9 @@ MEDIA_URL='/media/'
 # MEDIA_ROOT='/home/user/media/'
 MEDIA_ROOT = os.path.join(SITE_ROOT)
 TEMPLATES[0]['OPTIONS']['context_processors'].append('django.template.context_processors.media')
-LANGUAGE_CODE = 'en-AU'#'zh-hans'en-us
+LANGUAGE_CODE = 'zh-hans'#'zh-hans'en-us en-AU
 
-TIME_ZONE = 'Australia/Canberra'#'Asia/Shanghai' America/Chicago
+TIME_ZONE = 'Asia/Shanghai'#'Asia/Shanghai' America/Chicago Australia/Canberra
 
 USE_I18N = True
 USE_L10N = True#FalseTrue

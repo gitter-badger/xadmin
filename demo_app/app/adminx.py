@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 import xadmin
 from xadmin import views
-from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord,ccpa,xss,kmChoices,treatment,provider,customer,treatment_item,fund
+from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord,ccpa,xss,kmChoices,customer,treatment_item,fund,groupinfo
 from xadmin.layout import Main, TabHolder, Tab, Fieldset, Row, Col, AppendedText, Side
 from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction
@@ -45,6 +45,31 @@ class MaintainInline(object):
     model = MaintainLog
     extra = 1
     style = "accordion"
+
+
+
+@xadmin.sites.register(groupinfo)
+class groupinfoAdmin(object):
+    list_display = ("group_no","group_name")
+    list_display_links = ("group_name",)
+    # wizard_form_list = [
+    #     ("First's Form", ("name", "description")),
+    #     ("Second Form", ("contact", "telphone", "address")),
+    #     ("Thread Form", ("customer_id",))
+    # ]
+    search_fields = [ "group_name"]
+    list_filter = [
+        "group_name"
+    ]
+    list_quick_filter = [{"field": "group_name", "limit": 10}]
+
+    search_fields = ["group_name"]
+    # relfield_style = "fk-select"
+    reversion_enable = True
+
+    actions = [BatchChangeAction, ]
+    batch_fields = ("group_name")
+
 
 #
 # @xadmin.sites.register(kmChoices)
@@ -344,187 +369,187 @@ class MaintainInline(object):
 #         #     return qs
 #         # return qs.filter(user=ccpa.objects.filter(train_name=request.user))
 
-@xadmin.sites.register(treatment)
-class treatmentAdmin(object):
-    list_display = ('cust',"date", "item","prov","minute", "hicaps", "cash", "cost")
-    # list_editable = [ 'status']
-    list_printable = ['cust']
-    list_Print = ('cust')
-    date_hierarchy = 'date'
-    # data_charts = {
-    #     "user_count": {'title': u"Treatment Report", "x-field": "date", "y-field": ("prov_count",),
-    #                    "order": ('date',)},
-    #     # "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)}
-    # }
-    # list_display_links = ("name",)
-    # wizard_form_list = [
-    #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
-    #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
-    #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
-    # ]
-    # search_fields = ['cust',"date", "item"]
-    list_filter = [
-        'cust',"date", "item"
-    ]
-    # list_quick_filter = [{"field": "train", "limit": 10}]
-    # exclude = ['status','train']
-    free_query_filter = True
-    search_fields = ['cust__contact_number','cust__first_name','cust__last_name',"date", ]
-    # relfield_style = "train"
-    reversion_enable = False
-    list_export = ('xls',)
-    # actions = [BatchChangeAction, ]
-    # batch_fields = ("name", "phone", "edu", "periods")
+# @xadmin.sites.register(treatment)
+# class treatmentAdmin(object):
+#     list_display = ('cust',"date", "item","prov","minute", "hicaps", "cash", "cost")
+#     # list_editable = [ 'status']
+#     list_printable = ['cust']
+#     list_Print = ('cust')
+#     date_hierarchy = 'date'
+#     # data_charts = {
+#     #     "user_count": {'title': u"Treatment Report", "x-field": "date", "y-field": ("prov_count",),
+#     #                    "order": ('date',)},
+#     #     # "avg_count": {'title': u"Avg Report", "x-field": "date", "y-field": ('avg_count',), "order": ('date',)}
+#     # }
+#     # list_display_links = ("name",)
+#     # wizard_form_list = [
+#     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
+#     #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
+#     #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
+#     # ]
+#     # search_fields = ['cust',"date", "item"]
+#     list_filter = [
+#         'cust',"date", "item"
+#     ]
+#     # list_quick_filter = [{"field": "train", "limit": 10}]
+#     # exclude = ['status','train']
+#     free_query_filter = True
+#     search_fields = ['cust__contact_number','cust__first_name','cust__last_name',"date", ]
+#     # relfield_style = "train"
+#     reversion_enable = False
+#     list_export = ('xls',)
+#     # actions = [BatchChangeAction, ]
+#     # batch_fields = ("name", "phone", "edu", "periods")
+#
+#
+#     def get_list_queryset(self):
+#         print('self.request', self.request,self.request.GET.keys())
+#         for i in self.request.GET.keys():
+#             print(i,self.request.GET.get(i))
+#             # self.request.GET[i]='121212'
+#
+#
+#         # for i in self.request.GET.keys():
+#         #     print(i,self.request.GET.get(i))
+#
+#         queryset = super().get_list_queryset()
+#         # if self.user.is_superuser:
+#         #     return queryset
+#         # queryset = queryset.filter(train=self.request.user)
+#         return queryset
+#     # def save_models(self):
+#     #     # print('121212self.request', self.request,self)
+#     #     flag = self.org_obj is None and 'create' or 'change'
+#     #     if flag=='create':
+#     #         self.new_obj.train_id = str(self.request.user.id)
+#     #     super().save_models()
 
 
-    def get_list_queryset(self):
-        print('self.request', self.request,self.request.GET.keys())
-        for i in self.request.GET.keys():
-            print(i,self.request.GET.get(i))
-            # self.request.GET[i]='121212'
-
-
-        # for i in self.request.GET.keys():
-        #     print(i,self.request.GET.get(i))
-
-        queryset = super().get_list_queryset()
-        # if self.user.is_superuser:
-        #     return queryset
-        # queryset = queryset.filter(train=self.request.user)
-        return queryset
-    # def save_models(self):
-    #     # print('121212self.request', self.request,self)
-    #     flag = self.org_obj is None and 'create' or 'change'
-    #     if flag=='create':
-    #         self.new_obj.train_id = str(self.request.user.id)
-    #     super().save_models()
-
-
-@xadmin.sites.register(customer)
-class customerAdmin(object):
-    list_display = ('fullname',"date_of_birth","contact_number", "health_fund", "health_fund_number")
-    # list_editable = [ 'status'] 'first_name','last_name',
-    # list_printable = ['fullname']
-    # list_display_links = ("name",)
-    # wizard_form_list = [
-    #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
-    #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
-    #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
-    # ]
-    search_fields = ['first_name',"last_name", "health_fund", "health_fund_number"]
-    list_filter = [
-        'first_name',"last_name", "health_fund", "health_fund_number"
-    ]
-    # list_quick_filter = [{"field": "train", "limit": 10}]
-    # exclude = ['status','train']
-    # free_query_filter = True
-    search_fields = ["contact_number",'first_name',"last_name", "health_fund_number"]
-    # relfield_style = "train"
-    reversion_enable = False
-    list_export = ('xls',)
-    # actions = [BatchChangeAction, ]
-    # batch_fields = ("name", "phone", "edu", "periods")
-
-
-
-@xadmin.sites.register(provider)
-class providerAdmin(object):
-    list_display = ('fullname', "health_fund", "health_fund_number")
-    # list_editable = [ 'status']
-    # list_printable = ['health_fund_number']
-    # list_display_links = ("name",)
-    # wizard_form_list = [
-    #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
-    #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
-    #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
-    # ]
-    search_fields = ['first_name',"last_name", "health_fund", "health_fund_number"]
-    list_filter = [
-        'first_name',"last_name", "health_fund", "health_fund_number"
-    ]
-    # list_quick_filter = [{"field": "train", "limit": 10}]
-    # exclude = ['status','train']
-    # free_query_filter = True
-    # search_fields = ["train","name"]
-    # relfield_style = "train"
-    reversion_enable = False
-    list_export = ('xls',)
-    # actions = [BatchChangeAction, ]
-    # batch_fields = ("name", "phone", "edu", "periods")
-
-
-@xadmin.sites.register(fund)
-class fundAdmin(object):
-    list_display = ("name",)
-    # list_editable = ['status']
-    # list_printable = ['status']
-    # list_display_links = ("name",)
-    # wizard_form_list = [
-    #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
-    #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
-    #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
-    # ]
-    search_fields = ["name",]
-    list_filter = [
-        "name",
-    ]
-    # list_quick_filter = [{"field": "train", "limit": 10}]
-    # exclude = ['status', 'train']
-    # free_query_filter = True
-    # search_fields = ["train","name"]
-    # relfield_style = "train"
-    reversion_enable = False
-    list_export = ('xls',)
-    actions = [BatchChangeAction, ]
-    batch_fields = ("name")
-
-    # list_display = ('name')
-    # list_editable = [ 'status']
-    # list_printable = ['status']
-    # list_display_links = ("name",)
-    # wizard_form_list = [
-    #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
-    #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
-    #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
-    # ]
-    # search_fields = ['name']
-    # list_filter = [
-    #     'name'
-    # ]
-    # list_quick_filter = [{"field": "train", "limit": 10}]
-    # exclude = ['status','train']
-    # free_query_filter = True
-    # search_fields = ["train","name"]
-    # relfield_style = "train"
-    # reversion_enable = False
-    # list_export = ('xls',)
-    # actions = [BatchChangeAction, ]
-    # batch_fields = ("name", "phone", "edu", "periods")
-
-@xadmin.sites.register(treatment_item)
-class treatment_itemAdmin(object):
-    list_display = ('name',)
-    # list_editable = [ 'status']
-    # list_printable = ['status']
-    # list_display_links = ("name",)
-    # wizard_form_list = [
-    #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
-    #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
-    #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
-    # ]
-    search_fields = ['name',]
-    list_filter = [
-        'name',
-    ]
-    # list_quick_filter = [{"field": "train", "limit": 10}]
-    # exclude = ['status','train']
-    free_query_filter = True
-    # search_fields = ["train","name"]
-    # relfield_style = "train"
-    reversion_enable = False
-    list_export = ('xls',)
-    # actions = [BatchChangeAction, ]
-    # batch_fields = ("name", "phone", "edu", "periods")
+# @xadmin.sites.register(customer)
+# class customerAdmin(object):
+#     list_display = ('fullname',"date_of_birth","contact_number", "health_fund", "health_fund_number")
+#     # list_editable = [ 'status'] 'first_name','last_name',
+#     # list_printable = ['fullname']
+#     # list_display_links = ("name",)
+#     # wizard_form_list = [
+#     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
+#     #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
+#     #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
+#     # ]
+#     search_fields = ['first_name',"last_name", "health_fund", "health_fund_number"]
+#     list_filter = [
+#         'first_name',"last_name", "health_fund", "health_fund_number"
+#     ]
+#     # list_quick_filter = [{"field": "train", "limit": 10}]
+#     # exclude = ['status','train']
+#     # free_query_filter = True
+#     search_fields = ["contact_number",'first_name',"last_name", "health_fund_number"]
+#     # relfield_style = "train"
+#     reversion_enable = False
+#     list_export = ('xls',)
+#     # actions = [BatchChangeAction, ]
+#     # batch_fields = ("name", "phone", "edu", "periods")
+#
+#
+#
+# @xadmin.sites.register(provider)
+# class providerAdmin(object):
+#     list_display = ('fullname', "health_fund", "health_fund_number")
+#     # list_editable = [ 'status']
+#     # list_printable = ['health_fund_number']
+#     # list_display_links = ("name",)
+#     # wizard_form_list = [
+#     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
+#     #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
+#     #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
+#     # ]
+#     search_fields = ['first_name',"last_name", "health_fund", "health_fund_number"]
+#     list_filter = [
+#         'first_name',"last_name", "health_fund", "health_fund_number"
+#     ]
+#     # list_quick_filter = [{"field": "train", "limit": 10}]
+#     # exclude = ['status','train']
+#     # free_query_filter = True
+#     # search_fields = ["train","name"]
+#     # relfield_style = "train"
+#     reversion_enable = False
+#     list_export = ('xls',)
+#     # actions = [BatchChangeAction, ]
+#     # batch_fields = ("name", "phone", "edu", "periods")
+#
+#
+# @xadmin.sites.register(fund)
+# class fundAdmin(object):
+#     list_display = ("name",)
+#     # list_editable = ['status']
+#     # list_printable = ['status']
+#     # list_display_links = ("name",)
+#     # wizard_form_list = [
+#     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
+#     #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
+#     #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
+#     # ]
+#     search_fields = ["name",]
+#     list_filter = [
+#         "name",
+#     ]
+#     # list_quick_filter = [{"field": "train", "limit": 10}]
+#     # exclude = ['status', 'train']
+#     # free_query_filter = True
+#     # search_fields = ["train","name"]
+#     # relfield_style = "train"
+#     reversion_enable = False
+#     list_export = ('xls',)
+#     actions = [BatchChangeAction, ]
+#     batch_fields = ("name")
+#
+#     # list_display = ('name')
+#     # list_editable = [ 'status']
+#     # list_printable = ['status']
+#     # list_display_links = ("name",)
+#     # wizard_form_list = [
+#     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
+#     #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
+#     #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
+#     # ]
+#     # search_fields = ['name']
+#     # list_filter = [
+#     #     'name'
+#     # ]
+#     # list_quick_filter = [{"field": "train", "limit": 10}]
+#     # exclude = ['status','train']
+#     # free_query_filter = True
+#     # search_fields = ["train","name"]
+#     # relfield_style = "train"
+#     # reversion_enable = False
+#     # list_export = ('xls',)
+#     # actions = [BatchChangeAction, ]
+#     # batch_fields = ("name", "phone", "edu", "periods")
+#
+# @xadmin.sites.register(treatment_item)
+# class treatment_itemAdmin(object):
+#     list_display = ('name',)
+#     # list_editable = [ 'status']
+#     # list_printable = ['status']
+#     # list_display_links = ("name",)
+#     # wizard_form_list = [
+#     #     ("第一步", ( "area", "train", "periods","name","pinyin","sex", "guarantee_date", "nation","edu", "poilt", "icc","phone","email")),
+#     #     ("第二步", ("school", "work", "job","address","enaddress","Postcodes","telephone")),
+#     #     ("第三步", ("type","kskm","exam_date","exam_address","photo"))
+#     # ]
+#     search_fields = ['name',]
+#     list_filter = [
+#         'name',
+#     ]
+#     # list_quick_filter = [{"field": "train", "limit": 10}]
+#     # exclude = ['status','train']
+#     free_query_filter = True
+#     # search_fields = ["train","name"]
+#     # relfield_style = "train"
+#     reversion_enable = False
+#     list_export = ('xls',)
+#     # actions = [BatchChangeAction, ]
+#     # batch_fields = ("name", "phone", "edu", "periods")
 
 
 
