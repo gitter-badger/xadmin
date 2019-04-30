@@ -1,4 +1,6 @@
 import datetime
+
+from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.shortcuts import render
 from django.utils import timezone
@@ -14,8 +16,25 @@ def detail(request,num,num2):
     return HttpResponse("detail-%s-%s"%(num,num2))
 
 
-def printLogin(request):
+# views.py
+class IndexListView(ListView):
 
+
+    #model = BlogPost
+    paginate_by = 50
+    context_object_name = 'posts'
+    template_name = 'print_card.html'
+
+    # 注意，只有**kargs参数。
+    def get_context_data(self, **kargs):
+    # 很关键，必须把原方法的结果拿到
+        context = super().get_context_data(**kargs)
+        return context
+
+
+def printLogin(request):
+    #context = get_context_data(request)
+    #print('context',context)
     print('request',request)
     if request.method == "POST":
         name = request.POST.get('name')

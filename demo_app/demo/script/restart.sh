@@ -1,5 +1,5 @@
 #!/bin/sh
-NAME="demo_app"
+NAME="xadmin4"
 if [ ! -n "$NAME" ];then
     echo "no arguments"
     exit;
@@ -15,5 +15,5 @@ kill -9 $id
 echo "kill $id"
 done
 echo  "################################################"
-uwsgi --ini /www/web/xadmin2/demo_app/demo/script/uwsgi.ini
-chmod 777 /www/web/xadmin2/demo_app/script/uwsgi.sock
+uwsgi --ini /www/web/xadmin4/demo_app/demo/script/uwsgi.ini
+chmod 777 /www/web/xadmin4/demo_app/script/uwsgi.sock

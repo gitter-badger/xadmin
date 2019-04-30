@@ -9,3 +9,6 @@ python manage.py migrate
 python manage.py flush
 
 python manage.py createsuperuser
+
+pip install dateutil
+pip install xlutils

@@ -1,7 +1,11 @@
 from __future__ import absolute_import
+
+import xlrd
+# from dateutil.relativedelta import relativedelta
+
 import xadmin
 from xadmin import views
-from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord,ccpa,xss,kmChoices,customer,treatment_item,fund,groupinfo
+from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord,ccpa,xss,kmChoices,customer,treatment_item,fund,groupinfo,litreat
 from xadmin.layout import Main, TabHolder, Tab, Fieldset, Row, Col, AppendedText, Side
 from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction
@@ -71,6 +75,193 @@ class groupinfoAdmin(object):
     batch_fields = ("group_name")
 
 
+
+@xadmin.sites.register(litreat)
+class litreatAdmin(object):
+    list_display = ("yearm","icc_id","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_life","is_show","is_ontime","nowm_acc","all_acc","can_use_acc","used_acc","acc_detail","is_quit",)
+    list_display_links = ("icc_id",)
+    # wizard_form_list = [
+    #     ("First's Form", ("name", "description")),
+    #     ("Second Form", ("contact", "telphone", "address")),
+    #     ("Thread Form", ("customer_id",))
+    # ]
+    search_fields = [ "yearm","icc_id","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_life","is_show","is_ontime","nowm_acc","all_acc","can_use_acc","used_acc","acc_detail","is_quit"]
+    list_filter = [
+        "yearm","open_no"
+    ]
+    list_quick_filter = [{"field": "open_ins", "limit": 10}]
+
+    # search_fields = ["open_no"]
+    reversion_enable = False
+    list_export = ('xls',)
+    list_export1 = ('xls',)
+    # relfield_style = "fk-select"0.
+
+
+
+    reversion_enable = True
+    import_excel = True
+
+    actions = [BatchChangeAction, ]
+    batch_fields = ("open_no")
+
+    def post(self, request, *args, **kwargs):
+        #  导入逻辑
+        if 'excel' in request.FILES:
+            print('excel',request.FILES,'month',request.POST.get('month'))
+            opmonth = request.POST.get('month')
+            wb = xlrd.open_workbook(
+                filename=None, file_contents=request.FILES['excel'].read())  # 关键点在于这里
+            table = wb.sheets()[0]
+            row = table.nrows
+            t1col = ['账号', '开户机构', '客户名', '身份证', '交易笔数', '交易金额']
+            t1col2 = ['机构名称', '挂靠机构号', '法人名称', '法人身份证', '卡号', '日均', '交易总金额', '交易总笔数']
+            t1col3 = ['身份证', '客户名', '是否生活圈', '是否展示易拉宝', '是否按时还款', '是否清退', '本月消费积分', '积分消费详情']
+            tflag=0
+            add_litreat_list = []
+            op_icc_list=[]
+            for i in range(0, row):
+                col = table.row_values(i)
+                print('col',col)
+                if i==0 and t1col==col:
+                    print('是表一')
+                    tflag=1
+                elif i==0 and t1col2==col:
+                    print('是表二')
+                    tflag=2
+                elif i==0 and t1col3==col:
+                    print('是表三')
+                    tflag=3
+
+                if i>0:
+                    if tflag==1:
+                        #处理表1数据
+                        op_icc_list.append(col[3])
+                        aa = litreat.objects.filter(yearm=opmonth,icc_id=col[3])
+                        print('aa',aa)
+                        if aa:
+                            #有值更新
+                            litreat.objects.filter(yearm=opmonth, icc_id=col[3]).update(
+                                con_num=col[0],
+                                open_no=col[1],
+                                cust_name=col[2],
+                                jy_count=col[4],
+                                jy_num=col[5],
+                            )
+                        else:
+                            #无值新增
+                            obj = litreat(
+                                yearm=opmonth,
+                                icc_id=col[3],
+                                con_num=col[0],
+                                open_no=col[1],
+                                cust_name=col[2],
+                                jy_count=col[4],
+                                jy_num=col[5],
+                            )
+                            add_litreat_list.append(obj)
+                    if tflag==2:
+                        #处理表1数据
+                        op_icc_list.append(col[3])
+                        aa = litreat.objects.filter(yearm=opmonth,icc_id=col[3])
+                        print('aa',aa)
+                        if aa:
+                            #有值更新
+                            litreat.objects.filter(yearm=opmonth, icc_id=col[3]).update(
+                                open_ins=col[0],
+                                open_no=col[1],
+                                cust_name=col[2],
+                                day_avg=col[5],
+                                all_jy_count=col[7],
+                                all_jy_num=col[6],
+                            )
+                        else:
+                            #无值新增
+                            obj = litreat(
+                                yearm=opmonth,
+                                icc_id=col[3],
+                                con_num=col[4],
+                                open_ins=col[0],
+                                open_no=col[1],
+                                cust_name=col[2],
+                                day_avg=col[5],
+                                all_jy_count=col[7],
+                                all_jy_num=col[6],
+                            )
+                            add_litreat_list.append(obj)
+                            print('add_litreat_list',add_litreat_list)
+                    if tflag==3:
+                        #处理表1数据
+                        op_icc_list.append(col[0])
+                        aa = litreat.objects.filter(yearm=opmonth,icc_id=col[0])
+                        print('aa',aa)
+                        if aa:
+                            #有值更新
+                            litreat.objects.filter(yearm=opmonth, icc_id=col[0]).update(
+                                is_life=False if (col[2] == '否') else True,
+                                is_show=False if (col[3] == '否') else True,
+                                is_ontime=False if (col[4] == '否') else True,
+                                used_acc=col[6],
+                                acc_detail=col[7],
+                                is_quit=False if (col[5] == '否') else True,
+                            )
+                        else:
+                            #无值新增
+                            obj = litreat(
+                                yearm=opmonth,
+                                icc_id=col[0],
+                                cust_name=col[1],
+                                is_life=False if(col[2]=='否')else True,
+                                is_show=False if(col[3]=='否')else True,
+                                is_ontime=False if(col[4]=='否')else True,
+                                used_acc=col[6],
+                                acc_detail=col[7],
+                                is_quit=False if(col[5]=='否')else True,
+                            )
+                            add_litreat_list.append(obj)
+                            print('add_litreat_list',add_litreat_list)
+            if add_litreat_list != []:
+                litreat.objects.bulk_create(add_litreat_list)
+            updatejf(opmonth,op_icc_list)
+            pass  # 此处是一系列的操作接口, 通过  request.FILES 拿到数据随意操作
+        # return super(litreatAdmin, self).post(request, *args, **kwargs)  # 此返回值必须是这样
+        return super().post(request, *args, **kwargs)
+
+
+def updatejf(yearmonth,icc_list):
+    for col in icc_list:
+        aa = litreat.objects.filter(yearm=yearmonth,icc_id=col).first()
+        #计算本条积分，更新表字段
+        nowjf = 0
+        if aa.is_life:
+            #本月积分  是否生活圈*100+Limit(交易总笔数*1,200)+Limit(int(总交易金额/100)*1,300)+Limit(int(日均/1000)*1,200)+Limit(交易笔数*1,10)+Limit(int(交易金额/100)*1,10)
+
+            nowjf = 100+(aa.all_jy_count*1 if(aa.all_jy_count*1<200)else 200)+(int(aa.all_jy_num/100) if(int(aa.all_jy_num/100)<300)else 300) \
+                    + (int(aa.day_avg/1000) if(int(aa.day_avg/1000)<200)else 200) \
+                    + (int(aa.jy_count/1) if(int(aa.jy_count/1)<10)else 10) \
+                    + (int(aa.jy_num/100) if(int(aa.jy_num/100)<10)else 10)
+
+        alljf = nowjf
+        #总积分=year.months-1.id.总积分+本月积分-（year.months-1.id.是否展示易拉宝）*100-（year.months-1.id.是否生活圈）*100
+        import datetime
+        startTime = datetime.datetime.strptime(yearmonth, '%Y-%m')
+        # 前一个月最后一天
+        pre_month = startTime.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
+        pre_month_str = datetime.datetime.strftime(pre_month, "%Y-%m")
+        print('pre_month_str',pre_month_str)
+        bb = litreat.objects.filter(yearm=pre_month_str, icc_id=col).first()
+        if bb:
+            alljf = bb.all_acc + nowjf - bb.is_life*100
+        kyjf = nowjf -aa.used_acc
+        #可用积分=year.months-1.id.可用积分+本月积分-（year.months-1.id.是否展示易拉宝）*100-（year.months-1.id.是否生活圈）*100-积分消费记录
+        if bb:
+            kyjf = bb.can_use_acc + nowjf - bb.is_life*100 -aa.used_acc
+
+        litreat.objects.filter(yearm=yearmonth, icc_id=col).update(
+            nowm_acc=nowjf,
+            all_acc=alljf,
+            can_use_acc=kyjf,
+        )
 #
 # @xadmin.sites.register(kmChoices)
 # class kmChoicesAdmin(object):

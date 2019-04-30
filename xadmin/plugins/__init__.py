@@ -4,6 +4,7 @@ PLUGINS = (
     'filters',
     'bookmark',
     'export',
+    'export1',
     'layout',
     'refresh',
     'details',
@@ -29,7 +30,8 @@ PLUGINS = (
     'language',
     'quickfilter',
     'sortablelist',
-    'importexport'
+    'importexport',
+    'excel'
 )
 
 

@@ -427,7 +427,7 @@ class litreat(models.Model):
     yearm = models.CharField(max_length=20, verbose_name="记录年月")
     icc_id = models.CharField(max_length=50, verbose_name="身份证号")
     con_num = models.CharField(max_length=50, verbose_name="账号")
-    open_ins = models.CharField(max_length=50, verbose_name="开户机构",null=True)
+    open_ins = models.CharField(max_length=50, verbose_name="开户机构",null=True,blank=True)
     open_no = models.CharField(max_length=50, verbose_name="开户机构号")
     # open_ins = models.ForeignKey(groupinfo, on_delete=models.CASCADE, verbose_name="开户机构")
     cust_name = models.CharField(max_length=20, verbose_name="客户名")
@@ -435,7 +435,7 @@ class litreat(models.Model):
     jy_num = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="交易金额",default=0)
     day_avg = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="日均",default=0)
     all_jy_count = models.IntegerField(verbose_name="总交易笔数",default=0)
-    all_jy_num = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="总交易金额",default=0)
+    all_jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="总交易金额",default=0.0)
     is_life = models.BooleanField(default=False, verbose_name="是否生活圈")
     is_show = models.BooleanField(default=False, verbose_name="是否展示易拉宝")
     is_ontime = models.BooleanField(default=False, verbose_name="是否按时还款")
@@ -443,7 +443,7 @@ class litreat(models.Model):
     all_acc = models.IntegerField(verbose_name="总积分/贡献度",default=0)
     can_use_acc = models.IntegerField(verbose_name="可用积分",default=0)
     used_acc = models.IntegerField(verbose_name="本月消费积分",default=0)
-    acc_detail = models.CharField(max_length=1204, verbose_name="积分消费详情")
+    acc_detail = models.CharField(max_length=1204, verbose_name="积分消费详情",null=True,blank=True)
     is_quit = models.BooleanField(default=False, verbose_name="是否清退")
     is_bak = models.BooleanField(default=False, verbose_name="是否")
     # date = models.DateTimeField( auto_now_add=True)#,input_formats=['%d/%m/%Y  %H:%M:%S','%d/%m/%Y  %H:%M:%S',
@@ -460,7 +460,7 @@ class litreat(models.Model):
         return str(self.nowm_acc+self.nowm_acc)
 
     class Meta:
-        verbose_name = u"年月记录"
+        verbose_name = u"用户记录"
         verbose_name_plural = verbose_name
         unique_together = ('yearm','icc_id')
 

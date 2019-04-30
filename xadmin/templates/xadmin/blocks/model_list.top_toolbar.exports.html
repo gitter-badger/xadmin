@@ -27,6 +27,7 @@
                 {% endif %}
                 {% if et.type == "xls" %}
                 <input type="checkbox" name="export_xls_header" checked="checked" value="on"> {% trans "Export with table header." %}
+
                 {% endif %}
                 {% if et.type == "csv" %}
                 <input type="checkbox" name="export_csv_header" checked="checked" value="on"> {% trans "Export with table header." %}
@@ -40,6 +41,9 @@
               </label>
               <label class="checkbox">
                 <input type="checkbox" name="all" value="on"> {% trans "Export all data." %}
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" name="export_xls_temp" value="on"> 用模板导出数据
               </label>
           </div>
           <div class="modal-footer">

@@ -201,8 +201,8 @@ class Migration(migrations.Migration):
                 ('is_bak', models.BooleanField(default=False, verbose_name='是否')),
             ],
             options={
-                'verbose_name_plural': '年月记录',
-                'verbose_name': '年月记录',
+                'verbose_name_plural': '用户记录',
+                'verbose_name': '用户记录',
             },
         ),
         migrations.CreateModel(
