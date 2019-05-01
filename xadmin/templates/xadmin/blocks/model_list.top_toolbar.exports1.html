@@ -1,11 +1,14 @@
 {% load i18n %}
 <div class="btn-group export">
-  <form action=""  method="get" target="_blank" >
+  <form action=""  method="get" target="_blank" id="myform" >
       {{ form_params|safe }}
 
-     <button type="submit" >
+     <!--<button type="submit" >-->
+    <!--<i class="fa fa-share"></i> 打印-->
+  <!--</button>-->
+       <a class="btn btn-default btn-sm"  href="#" onclick="document.getElementById('myform').submit();">
     <i class="fa fa-share"></i> 打印
-  </button>
+  </a>
   </form>
 
 
