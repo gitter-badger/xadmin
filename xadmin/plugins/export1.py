@@ -2,6 +2,7 @@ import io
 import datetime
 import sys
 
+from dateutil.relativedelta import relativedelta
 from django.shortcuts import render
 from future.utils import iteritems
 
@@ -56,6 +57,10 @@ class ExportMenuPlugin1(BaseAdminPlugin):
                                                  context=get_context_dict(context)))
     def formdata(self,datas):
         print('datas',datas)
+        datetime_now = datetime.datetime.now()
+        datetime_three_month_ago = datetime_now - relativedelta(months=3)
+        untilMonth = datetime_three_month_ago.strftime('%Y-%m')
+        print(datetime_now,'datetime_three_month_ago',datetime_three_month_ago,untilMonth)
         #年月 身份证 名字 账号 开户行 本月积分
         limitlist=['记录年月', '身份证号', '客户名', '账号', '开户机构', '本月积分',]
 
@@ -68,8 +73,10 @@ class ExportMenuPlugin1(BaseAdminPlugin):
         lilv=0
         jfsum=0
         name=''
+        maxmonth=4
         for d1 in datas:
             i=i+1
+
             if i==1:
                 j=0
                 for d0 in d1:
@@ -81,24 +88,36 @@ class ExportMenuPlugin1(BaseAdminPlugin):
                 returndata.append(headlist)
             else:
                 datalist=[]
-                months = months+1
+                if d1[1] >= untilMonth:
+                    months = months + 1
+                    print('计算了', i, '个月')
+                # else:
+
                 for j in limitidlist:
                     j=j+1
                     datalist.append(d1[j-1])
                     if j==2:
                         #姓名
 
-                        if name !='' and name!=d1[j+1]:
-                            print('name q11111',name,d1[j+1])
+                        if name !='' and name!=d1[6]:
+                            print('name q11111',name,j,d1)
                             msg['code']='err'
                             msg['msg']='不止一个人'
-                        name=d1[j+1]
-                    if j>5:
-                        #本月积分
-                        jfsum=jfsum+int(d1[j])
+                        name=d1[6]
+                    if j>8:
+                        #本月积分  每行取当月积分累加
+
+                        if d1[1] >= untilMonth:
+                            print('计算了', i, '个月')
+                            jfsum = jfsum + int(d1[3])
+                        else:
+                            print(d1, 'abcd', j)
+
+
                 print('datalist',datalist)
                 returndata.append(datalist)
         pjjf = jfsum/months
+        print(' pjjf = jfsum/months', pjjf,jfsum,months)
         if pjjf>=600 and pjjf<650:
             lilv=5
         elif  pjjf>=650 and pjjf<700:
@@ -113,6 +132,8 @@ class ExportMenuPlugin1(BaseAdminPlugin):
             lilv=30
         elif  pjjf>=900 and pjjf<950:
             lilv=35
+        elif  pjjf>=950:
+            lilv=40
         replacedata = {'_name_': name, '_month_':months, '_lilv_': str(lilv)+'%'}
         print('replacedata',replacedata)
         return returndata,replacedata,msg

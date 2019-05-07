@@ -424,8 +424,10 @@ class litreat(models.Model):
     # UPLOAD_PATH_IMAGE = 'upload/image/'
 
     # cust = models.ForeignKey(customer, on_delete=models.CASCADE, verbose_name="customer")
-    yearm = models.CharField(max_length=20, verbose_name="记录年月")
+    yearm = models.CharField(max_length=20, verbose_name="记录年月")#models.DateField( auto_now_add=False, verbose_name="记录年月")#
     icc_id = models.CharField(max_length=50, verbose_name="身份证号")
+    nowm_acc = models.IntegerField(verbose_name="本月积分",default=0)
+    all_acc = models.IntegerField(verbose_name="总积分/贡献度",default=0)
     con_num = models.CharField(max_length=50, verbose_name="账号")
     open_ins = models.CharField(max_length=50, verbose_name="开户机构",null=True,blank=True)
     open_no = models.CharField(max_length=50, verbose_name="开户机构号")
@@ -436,11 +438,10 @@ class litreat(models.Model):
     day_avg = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="日均",default=0)
     all_jy_count = models.IntegerField(verbose_name="总交易笔数",default=0)
     all_jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="总交易金额",default=0.0)
-    is_life = models.BooleanField(default=False, verbose_name="是否生活圈")
+    is_life = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="百富生活圈折扣",default=9.6)#(default=False, verbose_name="百富生活圈折扣")
+    jnlx_num = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="缴纳利息",default=0)
     is_show = models.BooleanField(default=False, verbose_name="是否展示易拉宝")
     is_ontime = models.BooleanField(default=False, verbose_name="是否按时还款")
-    nowm_acc = models.IntegerField(verbose_name="本月积分",default=0)
-    all_acc = models.IntegerField(verbose_name="总积分/贡献度",default=0)
     can_use_acc = models.IntegerField(verbose_name="可用积分",default=0)
     used_acc = models.IntegerField(verbose_name="本月消费积分",default=0)
     acc_detail = models.CharField(max_length=1204, verbose_name="积分消费详情",null=True,blank=True)

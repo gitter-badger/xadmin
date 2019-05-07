@@ -78,19 +78,19 @@ class groupinfoAdmin(object):
 
 @xadmin.sites.register(litreat)
 class litreatAdmin(object):
-    list_display = ("yearm","icc_id","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_life","is_show","is_ontime","nowm_acc","all_acc","can_use_acc","used_acc","acc_detail","is_quit",)
+    list_display = [ "yearm","icc_id","nowm_acc","all_acc","is_life","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime","can_use_acc","used_acc","acc_detail","is_quit"]
     list_display_links = ("icc_id",)
     # wizard_form_list = [
     #     ("First's Form", ("name", "description")),
     #     ("Second Form", ("contact", "telphone", "address")),
     #     ("Thread Form", ("customer_id",))
     # ]
-    search_fields = [ "yearm","icc_id","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_life","is_show","is_ontime","nowm_acc","all_acc","can_use_acc","used_acc","acc_detail","is_quit"]
+    search_fields = [ "yearm","icc_id","nowm_acc","all_acc","is_life","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime","can_use_acc","used_acc","acc_detail","is_quit"]
     list_filter = [
         "yearm","open_no"
     ]
     list_quick_filter = [{"field": "open_ins", "limit": 10}]
-
+    # date_hierarchy = 'yearm'
     # search_fields = ["open_no"]
     reversion_enable = False
     list_export = ('xls',)
@@ -102,8 +102,8 @@ class litreatAdmin(object):
     reversion_enable = True
     import_excel = True
 
-    actions = [BatchChangeAction, ]
-    batch_fields = ("open_no")
+    # actions = [BatchChangeAction, ]
+    # batch_fields = ("open_no")
 
     def post(self, request, *args, **kwargs):
         #  导入逻辑
@@ -116,7 +116,7 @@ class litreatAdmin(object):
             row = table.nrows
             t1col = ['账号', '开户机构', '客户名', '身份证', '交易笔数', '交易金额']
             t1col2 = ['机构名称', '挂靠机构号', '法人名称', '法人身份证', '卡号', '日均', '交易总金额', '交易总笔数']
-            t1col3 = ['身份证', '客户名', '是否生活圈', '是否展示易拉宝', '是否按时还款', '是否清退', '本月消费积分', '积分消费详情']
+            t1col3 = ['身份证', '客户名', '百富生活圈折扣', '是否展示易拉宝', '是否按时还款', '是否清退', '本月消费积分', '积分消费详情','缴纳利息']
             tflag=0
             add_litreat_list = []
             op_icc_list=[]
@@ -198,11 +198,12 @@ class litreatAdmin(object):
                         if aa:
                             #有值更新
                             litreat.objects.filter(yearm=opmonth, icc_id=col[0]).update(
-                                is_life=False if (col[2] == '否') else True,
+                                is_life=col[2],
                                 is_show=False if (col[3] == '否') else True,
                                 is_ontime=False if (col[4] == '否') else True,
                                 used_acc=col[6],
                                 acc_detail=col[7],
+                                jnlx_num=col[8],
                                 is_quit=False if (col[5] == '否') else True,
                             )
                         else:
@@ -211,11 +212,12 @@ class litreatAdmin(object):
                                 yearm=opmonth,
                                 icc_id=col[0],
                                 cust_name=col[1],
-                                is_life=False if(col[2]=='否')else True,
+                                is_life=col[2],
                                 is_show=False if(col[3]=='否')else True,
                                 is_ontime=False if(col[4]=='否')else True,
                                 used_acc=col[6],
                                 acc_detail=col[7],
+                                jnlx_num=col[8],
                                 is_quit=False if(col[5]=='否')else True,
                             )
                             add_litreat_list.append(obj)
@@ -232,14 +234,29 @@ def updatejf(yearmonth,icc_list):
     for col in icc_list:
         aa = litreat.objects.filter(yearm=yearmonth,icc_id=col).first()
         #计算本条积分，更新表字段
+        # 生活圈按折扣对应积分
+        zkjf={'10.00-9.60':0,'9.60-9.20':100,'9.20-8.80':120,'8.80-8.00':130,'8.00-7.00':150,'7.00-6.50':180,'6.50-0.00':200,}
+
         nowjf = 0
         if aa.is_life:
-            #本月积分  是否生活圈*100+Limit(交易总笔数*1,200)+Limit(int(总交易金额/100)*1,300)+Limit(int(日均/1000)*1,200)+Limit(交易笔数*1,10)+Limit(int(交易金额/100)*1,10)
+            lifezk = '10.00-9.60'
+            for key in zkjf:
+                print(key + ':' + str(zkjf[key]))
+                bb = key.split('-')
+                print(float(bb[1]),float(aa.is_life),float(bb[0]),(float(aa.is_life)>float(bb[1]) and float(aa.is_life)<=float(bb[0])))
+                if float(aa.is_life)>float(bb[1]) and float(aa.is_life)<=float(bb[0]):
+                    lifezk = key
+                    break
+            print(aa.is_life,'aaa',lifezk)
 
-            nowjf = 100+(aa.all_jy_count*1 if(aa.all_jy_count*1<200)else 200)+(int(aa.all_jy_num/100) if(int(aa.all_jy_num/100)<300)else 300) \
+            #本月积分  是否生活圈*100+Limit(交易总笔数*1,200)+Limit(int(总交易金额/100)*1,300)+Limit(int(日均/1000)*1,200)+Limit(交易笔数*1,10)+Limit(int(交易金额/100)*1,10)
+            print('zkjf[lifezk]',zkjf[lifezk])
+            nowjf = zkjf[lifezk]+(aa.all_jy_count*1 if(aa.all_jy_count*1<200)else 200)+(int(aa.all_jy_num/100) if(int(aa.all_jy_num/100)<300)else 300) \
                     + (int(aa.day_avg/1000) if(int(aa.day_avg/1000)<200)else 200) \
                     + (int(aa.jy_count/1) if(int(aa.jy_count/1)<10)else 10) \
-                    + (int(aa.jy_num/100) if(int(aa.jy_num/100)<10)else 10)
+                    + (int(aa.jy_num/100) if(int(aa.jy_num/100)<10)else 10) \
+                    + (int(aa.jnlx_num/500) if(int(aa.jnlx_num/500)<200)else 200)
+            print(aa.icc_id,'nowjf',nowjf)
 
         alljf = nowjf
         #总积分=year.months-1.id.总积分+本月积分-（year.months-1.id.是否展示易拉宝）*100-（year.months-1.id.是否生活圈）*100

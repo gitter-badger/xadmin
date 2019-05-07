@@ -6,10 +6,61 @@
      <!--<button type="submit" >-->
     <!--<i class="fa fa-share"></i> 打印-->
   <!--</button>-->
-       <a class="btn btn-default btn-sm"  href="#" onclick="document.getElementById('myform').submit();">
+       <a class="btn btn-default btn-sm"  href="#" onclick="cfm()">
     <i class="fa fa-share"></i> 打印
   </a>
   </form>
+    <!-- 模态框 -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog  modal-sm">
+    <div class="modal-content">
+
+      <!-- 模态框头部 -->
+      <div class="modal-header">
+        <h4 class="modal-title">提示</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- 模态框主体 -->
+      <div class="modal-body">
+        您选择数据中不止一个用户，此功能仅支持单次单个用户 请重新选择
+      </div>
+
+      <!-- 模态框底部 -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+    <script>
+        function cfm() {
+            //alert($('.grid-item').length)
+            var aa='';
+            var txflag=0;
+            $('.grid-item').each(function () {
+
+                console.log(aa);
+                if(aa!='' && aa!=$(this).find("td:eq(2)").text().trim()){
+                    // alert('不止一个用户');
+                    txflag=1;
+
+                    // return false;
+                }
+
+                aa=$(this).find("td:eq(2)").text().trim();
+            })
+
+            if(txflag==0){
+                document.getElementById('myform').submit();
+            }else {
+                $("#myModal").modal({show:true,});
+            }
+
+        }
+
+    </script>
 
 
 

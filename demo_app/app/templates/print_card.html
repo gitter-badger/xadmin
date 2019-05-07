@@ -11,6 +11,7 @@
             document.body.innerHTML = oldstr;
             return false;
         }
+
     </script>
     <title>贷款利率浮动值打印</title>
 
@@ -20,7 +21,7 @@
 <body>
 <!--//HTML Page-->
 <!--//Other content you wouldn't like to print-->
-<input align="right" name="b_print" type="button" class="ipt" onClick="printdiv('div_print');" value=" 打印 ">
+<!--<input align="right" name="b_print" type="button" class="ipt" onClick="printdiv('div_print');" value=" 打印 ">-->
 
 <div id="div_print">
 
@@ -47,7 +48,7 @@
         }
 
         .table tr {
-            height: 80px;
+            height: 40px;
             width: 100%
         }
     </style>
@@ -59,12 +60,12 @@
             <td height="100">
                 <table width="100%" height="100%" border="0" cellspacing="2">
                     <tr>
-                        <td width="80%" align="center">
+                        <td width="100%" align="center">
 
-                            <table width="90%" height="100%" border="0"
+                            <table width="100%" height="100%" border="0"
                                    style="border-collapse:separate; border-spacing:20px 0px;">
                                 <tr>
-                                    <td width="80%">
+                                    <td >
                                         <h2 align="center">{{name}}贷款利率综合评分</h2>
                                         <br>
                                         <p>根据最近{{month}}月以来我行综合评分计算，{{name}}的贷款利率浮动值为：{{lilv}}</p>
@@ -76,8 +77,8 @@
                                 <!--<td>业务电话：</td>-->
                                 <!--</tr>-->
                                 <tr>
-                                    <td colspan="2">
-                                        <table class="table" width="90%"
+                                    <td >
+                                        <table class="table" width="100%"
                                                style="border:1px solid #000000;border-collapse: collapse;vertical-align:middle ;">
                                             {% for item in datas%}
                                             <tr align="center">
@@ -91,15 +92,13 @@
 
                                 </tr>
                                  <tr>
-                                     <td></td>
-                                    <td colspan="1" >
+                                    <td align="right">
                                         {{formatted_today}}
                                     </td>
                                 </tr>
 
                                  <tr>
-                                     <td></td>
-                                    <td colspan="1"  >
+                                    <td align="right"  >
 
                                 盖章
                                     </td>
@@ -120,6 +119,7 @@
 <!--//Other content you wouldn't like to print-->
 </body>
 <script>
-    $(".modal-footer").hide();
+    // $(".modal-footer").hide();
+    window.onload=printdiv('div_print');
 </script>
 </html

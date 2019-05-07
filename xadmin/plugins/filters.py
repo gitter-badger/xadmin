@@ -101,8 +101,10 @@ class FilterPlugin(BaseAdminPlugin):
             for list_filter in self.list_filter:
                 if callable(list_filter):
                     # This is simply a custom list filter class.
+
                     spec = list_filter(self.request, lookup_params,
                                        self.model, self)
+                    print('spec0', spec)
                 else:
                     field_path = None
                     field_parts = []
@@ -122,7 +124,7 @@ class FilterPlugin(BaseAdminPlugin):
                     spec = field_list_filter_class(
                         field, self.request, lookup_params,
                         self.model, self.admin_view, field_path=field_path)
-
+                    print('spec1', spec)
                     if len(field_parts) > 1:
                         # Add related model name to title
                         spec.title = "%s %s" % (field_parts[-2].name, spec.title)
@@ -138,7 +140,7 @@ class FilterPlugin(BaseAdminPlugin):
                         self.admin_view.message_user(_("<b>Filtering error:</b> %s") % e.messages[0], 'error')
                     if new_qs is not None:
                         queryset = new_qs
-
+                    print('spec',spec)
                     self.filter_specs.append(spec)
 
         self.has_filters = bool(self.filter_specs)
