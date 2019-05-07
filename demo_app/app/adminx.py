@@ -78,7 +78,7 @@ class groupinfoAdmin(object):
 
 @xadmin.sites.register(litreat)
 class litreatAdmin(object):
-    list_display = [ "yearm","icc_id","nowm_acc","all_acc","is_life","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime","can_use_acc","used_acc","acc_detail","is_quit"]
+    list_display = [ "yearm","icc_id","cust_name","con_num","nowm_acc","all_acc","is_life","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime","can_use_acc","used_acc","acc_detail","is_quit"]
     list_display_links = ("icc_id",)
     # wizard_form_list = [
     #     ("First's Form", ("name", "description")),

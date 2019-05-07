@@ -99,17 +99,17 @@ class ExportMenuPlugin1(BaseAdminPlugin):
                     if j==2:
                         #姓名
 
-                        if name !='' and name!=d1[6]:
+                        if name !='' and name!=d1[3]:
                             print('name q11111',name,j,d1)
                             msg['code']='err'
                             msg['msg']='不止一个人'
-                        name=d1[6]
+                        name=d1[3]
                     if j>8:
                         #本月积分  每行取当月积分累加
 
                         if d1[1] >= untilMonth:
                             print('计算了', i, '个月')
-                            jfsum = jfsum + int(d1[3])
+                            jfsum = jfsum + int(d1[5])
                         else:
                             print(d1, 'abcd', j)
 
