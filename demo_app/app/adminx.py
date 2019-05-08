@@ -136,11 +136,13 @@ class litreatAdmin(object):
             op_icc_list=[]
             #获取账号归属机构列表
             print(self.user, 'self.request.user', self.request.user)
-            aa = usergroupinfo.objects.filter(userinfo=self.user).first()
-            print('aa', aa, aa.group.all())
+
             groupidlist = []
-            for a in aa.group.all():
-                groupidlist.append(a.group_no)
+            if not self.user.is_superuser:
+                aa = usergroupinfo.objects.filter(userinfo=self.user).first()
+                print('aa', aa, aa.group.all())
+                for a in aa.group.all():
+                    groupidlist.append(a.group_no)
             # queryset = queryset.filter(open_no__in=groupidlist)
             for i in range(0, row):
                 col = table.row_values(i)
@@ -161,10 +163,20 @@ class litreatAdmin(object):
                         op_icc_list.append(col[3])
                         aa = litreat.objects.filter(yearm=opmonth,icc_id=col[3])
                         print('aa',aa)
+                        bb = groupinfo.objects.filter(group_no=col[1]).first()
+                        if not bb:
+                            obj = groupinfo(
+                                group_no=col[1],
+                                group_name=col[1],
+                            )
+                            obj.save()
                         #非超级管理员只能导入部分行的数据
                         if not self.user.is_superuser and col[1] not in groupidlist:
                             print(col[1],'col[1] not in groupidlist',groupidlist)
                             continue
+
+
+
                         if aa:
                             #有值更新
                             litreat.objects.filter(yearm=opmonth, icc_id=col[3]).update(
@@ -190,6 +202,17 @@ class litreatAdmin(object):
                         #处理表1数据
                         op_icc_list.append(col[3])
                         aa = litreat.objects.filter(yearm=opmonth,icc_id=col[3])
+                        bb = groupinfo.objects.filter(group_no=col[1]).first()
+                        if not bb:
+                            obj = groupinfo(
+                                group_no=col[1],
+                                group_name=col[0],
+                            )
+                            obj.save()
+                        else:
+                            groupinfo.objects.filter(group_no=col[1]).update(
+                                group_name=col[0],
+                            )
                         print('aa',aa)
                         if aa:
                             #有值更新
@@ -293,10 +316,10 @@ def updatejf(yearmonth,icc_list):
         #计算本条积分，更新表字段
         # 生活圈按折扣对应积分
         zkjf={'10.00-9.60':0,'9.60-9.20':100,'9.20-8.80':120,'8.80-8.00':130,'8.00-7.00':150,'7.00-6.50':180,'6.50-0.00':200,}
-
+        lifezk = '10.00-9.60'
         nowjf = 0
         if aa.is_life:
-            lifezk = '10.00-9.60'
+
             for key in zkjf:
                 print(key + ':' + str(zkjf[key]))
                 bb = key.split('-')
