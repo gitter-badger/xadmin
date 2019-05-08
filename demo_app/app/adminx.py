@@ -130,10 +130,18 @@ class litreatAdmin(object):
             row = table.nrows
             t1col = ['账号', '开户机构', '客户名', '身份证', '交易笔数', '交易金额']
             t1col2 = ['机构名称', '挂靠机构号', '法人名称', '法人身份证', '卡号', '日均', '交易总金额', '交易总笔数']
-            t1col3 = ['身份证', '客户名', '百富生活圈折扣', '是否展示易拉宝', '是否按时还款', '是否清退', '本月消费积分', '积分消费详情','缴纳利息']
+            t1col3 = ['身份证', '客户名', '百富生活圈折扣', '是否展示易拉宝', '是否按时还款', '是否清退', '本月消费积分', '积分消费详情','缴纳利息','投诉次数']
             tflag=0
             add_litreat_list = []
             op_icc_list=[]
+            #获取账号归属机构列表
+            print(self.user, 'self.request.user', self.request.user)
+            aa = usergroupinfo.objects.filter(userinfo=self.user).first()
+            print('aa', aa, aa.group.all())
+            groupidlist = []
+            for a in aa.group.all():
+                groupidlist.append(a.group_no)
+            # queryset = queryset.filter(open_no__in=groupidlist)
             for i in range(0, row):
                 col = table.row_values(i)
                 print('col',col)
@@ -153,6 +161,10 @@ class litreatAdmin(object):
                         op_icc_list.append(col[3])
                         aa = litreat.objects.filter(yearm=opmonth,icc_id=col[3])
                         print('aa',aa)
+                        #非超级管理员只能导入部分行的数据
+                        if not self.user.is_superuser and col[1] not in groupidlist:
+                            print(col[1],'col[1] not in groupidlist',groupidlist)
+                            continue
                         if aa:
                             #有值更新
                             litreat.objects.filter(yearm=opmonth, icc_id=col[3]).update(
@@ -219,6 +231,7 @@ class litreatAdmin(object):
                                 acc_detail=col[7],
                                 jnlx_num=col[8],
                                 is_quit=False if (col[5] == '否') else True,
+                                ts_count=col[9],
                             )
                         else:
                             #无值新增
@@ -233,6 +246,7 @@ class litreatAdmin(object):
                                 acc_detail=col[7],
                                 jnlx_num=col[8],
                                 is_quit=False if(col[5]=='否')else True,
+                                ts_count=col[9],
                             )
                             add_litreat_list.append(obj)
                             print('add_litreat_list',add_litreat_list)
@@ -298,7 +312,8 @@ def updatejf(yearmonth,icc_list):
                     + (int(aa.day_avg/1000) if(int(aa.day_avg/1000)<200)else 200) \
                     + (int(aa.jy_count/1) if(int(aa.jy_count/1)<10)else 10) \
                     + (int(aa.jy_num/100) if(int(aa.jy_num/100)<10)else 10) \
-                    + (int(aa.jnlx_num/500) if(int(aa.jnlx_num/500)<200)else 200)
+                    + (int(aa.jnlx_num/500) if(int(aa.jnlx_num/500)<200)else 200) \
+                    + aa.is_show*100
             print(aa.icc_id,'nowjf',nowjf)
 
         alljf = nowjf
@@ -311,7 +326,9 @@ def updatejf(yearmonth,icc_list):
         print('pre_month_str',pre_month_str)
         bb = litreat.objects.filter(yearm=pre_month_str, icc_id=col).first()
         if bb:
-            alljf = bb.all_acc + nowjf - bb.is_life*100
+            alljf = bb.all_acc + nowjf - bb.is_show*100-zkjf[lifezk]
+            if alljf<0:
+                alljf=0
         kyjf = nowjf -aa.used_acc
         #可用积分=year.months-1.id.可用积分+本月积分-（year.months-1.id.是否展示易拉宝）*100-（year.months-1.id.是否生活圈）*100-积分消费记录
         if bb:

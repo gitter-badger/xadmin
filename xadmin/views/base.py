@@ -320,8 +320,8 @@ class CommAdminView(BaseAdminView):
     base_template = 'xadmin/base_site.html'
     menu_template = 'xadmin/includes/sitemenu_default.html'
 
-    site_title = getattr(settings, "XADMIN_TITLE", _(u"用户贷款利率测算"))
-    site_footer = getattr(settings, "XADMIN_FOOTER_TITLE", _(u"琪睿科技.inc"))
+    site_title = getattr(settings, "XADMIN_TITLE", _(u"广信农商银行贷款利率系统"))
+    site_footer = getattr(settings, "XADMIN_FOOTER_TITLE", _(u"广信农商银行.inc 当前版本号1.0.1"))
 
     global_models_icon = {}
     default_model_icon = None

@@ -202,11 +202,15 @@ class ExportPlugin(BaseAdminPlugin):
         elif  pjjf>=750 and pjjf<800:
             lilv=20
         elif  pjjf>=800 and pjjf<850:
-            lilv=25
-        elif  pjjf>=850 and pjjf<900:
             lilv=30
-        elif  pjjf>=900 and pjjf<950:
+        elif  pjjf>=850 and pjjf<900:
             lilv=35
+        elif  pjjf>=900 and pjjf<950:
+            lilv=40
+        elif  pjjf>=950 and pjjf<1000:
+            lilv=45
+        elif  pjjf>=1000:
+            lilv=50
         replacedata = {'_name_': name, '_month_':months, '_lilv_': str(lilv)+'%'}
         print('replacedata',replacedata)
         return returndata,replacedata,msg
