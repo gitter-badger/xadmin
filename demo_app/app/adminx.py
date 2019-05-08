@@ -5,7 +5,7 @@ import xlrd
 
 import xadmin
 from xadmin import views
-from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord,ccpa,xss,kmChoices,customer,treatment_item,fund,groupinfo,litreat
+from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord,ccpa,xss,kmChoices,customer,treatment_item,fund,groupinfo,litreat,usergroupinfo
 from xadmin.layout import Main, TabHolder, Tab, Fieldset, Row, Col, AppendedText, Side
 from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction
@@ -104,6 +104,20 @@ class litreatAdmin(object):
 
     # actions = [BatchChangeAction, ]
     # batch_fields = ("open_no")
+
+    def get_list_queryset(self):
+        print('self.request', self.request)
+        queryset = super().get_list_queryset()
+        if self.user.is_superuser:
+            return queryset
+        print(self.user,'self.request.user',self.request.user)
+        aa=usergroupinfo.objects.filter(userinfo=self.user).first()
+        print('aa',aa,aa.group.all())
+        groupidlist =[]
+        for a in aa.group.all():
+            groupidlist.append(a.group_no)
+        queryset = queryset.filter(open_no__in=groupidlist)
+        return queryset
 
     def post(self, request, *args, **kwargs):
         #  导入逻辑
@@ -228,6 +242,35 @@ class litreatAdmin(object):
             pass  # 此处是一系列的操作接口, 通过  request.FILES 拿到数据随意操作
         # return super(litreatAdmin, self).post(request, *args, **kwargs)  # 此返回值必须是这样
         return super().post(request, *args, **kwargs)
+@xadmin.sites.register(usergroupinfo)
+class grouAdmin(object):
+    list_display = [ "userinfo","group"]
+    list_display_links = ("userinfo",)
+    # wizard_form_list = [
+    #     ("First's Form", ("name", "description")),
+    #     ("Second Form", ("contact", "telphone", "address")),
+    #     ("Thread Form", ("customer_id",))
+    # ]
+    # search_fields = [ "yearm","icc_id","nowm_acc","all_acc","is_life","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime","can_use_acc","used_acc","acc_detail","is_quit"]
+    # list_filter = [
+    #     "yearm","open_no"
+    # ]
+    # list_quick_filter = [{"field": "open_ins", "limit": 10}]
+    # date_hierarchy = 'yearm'
+    # search_fields = ["open_no"]
+    reversion_enable = False
+    # list_export = ('xls',)
+    # list_export1 = ('xls',)
+    # relfield_style = "fk-select"0.
+
+
+
+    # reversion_enable = True
+    # import_excel = True
+
+    # actions = [BatchChangeAction, ]
+    # batch_fields = ("open_no")
+
 
 
 def updatejf(yearmonth,icc_list):

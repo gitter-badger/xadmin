@@ -405,18 +405,32 @@ class groupinfo(models.Model):
 
 
     def __str__(self):
-        return self.group_name
+        return self.group_no+' '+self.group_name
     def fullname(self):
         return self.group_no+' '+self.group_name
-
-
-    # def get_card_no(self):
-    #     return self.id
-
     class Meta:
         verbose_name = u"机构信息"
         verbose_name_plural = verbose_name
-        unique_together = ('group_no',)
+
+@python_2_unicode_compatible
+class usergroupinfo(models.Model):
+    # UPLOAD_PATH_IMAGE = 'upload/image/'
+    userinfo = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="支行管理员")
+    group = models.ManyToManyField(groupinfo,verbose_name=u'可操作支行')
+
+    # train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
+
+    def __str__(self):
+        return str(self.id)
+    class Meta:
+        verbose_name = u"支行管理员"
+        verbose_name_plural = verbose_name
+    def getgroups(self):
+        aa = '11'
+        for a in self.group:
+            aa=aa+a.group_no+','
+        return aa
+
 
 
 @python_2_unicode_compatible
