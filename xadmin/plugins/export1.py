@@ -104,12 +104,12 @@ class ExportMenuPlugin1(BaseAdminPlugin):
                             msg['code']='err'
                             msg['msg']='不止一个人'
                         name=d1[3]
-                    if j>8:
+                    if j==1:
                         #本月积分  每行取当月积分累加
 
-                        if d1[1] >= untilMonth:
-                            print('计算了', i, '个月')
-                            jfsum = jfsum + int(d1[5])
+                        if d1[0] >= untilMonth:
+                            print('计算了', i, '个月',d1[4],d1)
+                            jfsum = jfsum + int(d1[4])
                         else:
                             print(d1, 'abcd', j)
 

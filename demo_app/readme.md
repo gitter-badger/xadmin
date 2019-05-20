@@ -10,5 +10,8 @@ python manage.py flush
 
 python manage.py createsuperuser
 
-pip install dateutil
+pip install python-dateutil
+
 pip install xlutils
+
+pip install pymysql

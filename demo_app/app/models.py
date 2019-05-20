@@ -423,7 +423,7 @@ class usergroupinfo(models.Model):
     def __str__(self):
         return str(self.id)
     class Meta:
-        verbose_name = u"支行管理员"
+        verbose_name = u"支行管理"
         verbose_name_plural = verbose_name
     def getgroups(self):
         aa = '11'

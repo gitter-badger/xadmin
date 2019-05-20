@@ -9,7 +9,9 @@ from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord,ccpa,xss,kmC
 from xadmin.layout import Main, TabHolder, Tab, Fieldset, Row, Col, AppendedText, Side
 from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction
-
+import datetime
+import calendar
+import time
 #
 # @xadmin.sites.register(views.website.IndexView)
 # class MainDashboard(object):
@@ -112,10 +114,11 @@ class litreatAdmin(object):
             return queryset
         print(self.user,'self.request.user',self.request.user)
         aa=usergroupinfo.objects.filter(userinfo=self.user).first()
-        print('aa',aa,aa.group.all())
         groupidlist =[]
-        for a in aa.group.all():
-            groupidlist.append(a.group_no)
+        if aa and aa.group:
+            print('aa',aa,aa.group.all())
+            for a in aa.group.all():
+                groupidlist.append(a.group_no)
         queryset = queryset.filter(open_no__in=groupidlist)
         return queryset
 
@@ -140,7 +143,7 @@ class litreatAdmin(object):
             groupidlist = []
             if not self.user.is_superuser:
                 aa = usergroupinfo.objects.filter(userinfo=self.user).first()
-                print('aa', aa, aa.group.all())
+                # print('aa', aa, aa.group.all())
                 for a in aa.group.all():
                     groupidlist.append(a.group_no)
             # queryset = queryset.filter(open_no__in=groupidlist)
@@ -311,6 +314,8 @@ class grouAdmin(object):
 
 
 def updatejf(yearmonth,icc_list):
+    print('更新月份积分yearmonth',yearmonth)
+    tmp_list = icc_list
     for col in icc_list:
         aa = litreat.objects.filter(yearm=yearmonth,icc_id=col).first()
         #计算本条积分，更新表字段
@@ -341,7 +346,7 @@ def updatejf(yearmonth,icc_list):
 
         alljf = nowjf
         #总积分=year.months-1.id.总积分+本月积分-（year.months-1.id.是否展示易拉宝）*100-（year.months-1.id.是否生活圈）*100
-        import datetime
+
         startTime = datetime.datetime.strptime(yearmonth, '%Y-%m')
         # 前一个月最后一天
         pre_month = startTime.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
@@ -355,13 +360,27 @@ def updatejf(yearmonth,icc_list):
         kyjf = nowjf -aa.used_acc
         #可用积分=year.months-1.id.可用积分+本月积分-（year.months-1.id.是否展示易拉宝）*100-（year.months-1.id.是否生活圈）*100-积分消费记录
         if bb:
-            kyjf = bb.can_use_acc + nowjf - bb.is_life*100 -aa.used_acc
+            kyjf = bb.can_use_acc + nowjf -zkjf[lifezk] -aa.used_acc - bb.is_show*100
 
         litreat.objects.filter(yearm=yearmonth, icc_id=col).update(
             nowm_acc=nowjf,
             all_acc=alljf,
             can_use_acc=kyjf,
         )
+    #获取当前月及12月前时间，判断yearmonth+1个月是否小于当前年月且在当前年月前12个月内，则操作
+    startTime = datetime.datetime.strptime(yearmonth, '%Y-%m')
+    # 前一个月最后一天
+    pre_month = startTime.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
+    pre_month_str = datetime.datetime.strftime(pre_month, "%Y-%m")
+    # 求后一个月的第一天
+    days_num = calendar.monthrange(startTime.year, startTime.month)[1]  # 获取一个月有多少天
+    first_day_of_next_month = startTime + datetime.timedelta(days=days_num)  # 当月的最后一天只需要days_num-1即可
+    next_month_str = datetime.datetime.strftime(first_day_of_next_month, "%Y-%m")
+    print(u'后一个月的第一天:' + str(first_day_of_next_month))
+    if first_day_of_next_month<datetime.datetime.now():
+        updatejf(next_month_str, tmp_list)
+
+
 #
 # @xadmin.sites.register(kmChoices)
 # class kmChoicesAdmin(object):
