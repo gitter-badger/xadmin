@@ -126,156 +126,6 @@ def replace_field_to_value(layout, cb):
             replace_field_to_value(lo, cb)
 
 
-class DetailAdminView(ModelAdminView):
-
-    form = forms.ModelForm
-    detail_layout = None
-    detail_show_all = True
-    detail_template = None
-    form_layout = None
-
-    def init_request(self, object_id, *args, **kwargs):
-        self.obj = self.get_object(unquote(object_id))
-
-        if not self.has_view_permission(self.obj):
-            raise PermissionDenied
-
-        if self.obj is None:
-            raise Http404(
-                _('%(name)s object with primary key %(key)r does not exist.') %
-                {'name': force_text(self.opts.verbose_name), 'key': escape(object_id)})
-        self.org_obj = self.obj
-
-    @filter_hook
-    def get_form_layout(self):
-        layout = copy.deepcopy(self.detail_layout or self.form_layout)
-
-        if layout is None:
-            layout = Layout(Container(Col('full',
-                                          Fieldset(
-                                              "", *self.form_obj.fields.keys(),
-                                              css_class="unsort no_title"), horizontal=True, span=12)
-                                      ))
-        elif type(layout) in (list, tuple) and len(layout) > 0:
-            if isinstance(layout[0], Column):
-                fs = layout
-            elif isinstance(layout[0], (Fieldset, TabHolder)):
-                fs = (Col('full', *layout, horizontal=True, span=12),)
-            else:
-                fs = (
-                    Col('full', Fieldset("", *layout, css_class="unsort no_title"), horizontal=True, span=12),)
-
-            layout = Layout(Container(*fs))
-
-            if self.detail_show_all:
-                rendered_fields = [i[1] for i in layout.get_field_names()]
-                container = layout[0].fields
-                other_fieldset = Fieldset(_(u'Other Fields'), *[
-                                          f for f in self.form_obj.fields.keys() if f not in rendered_fields])
-
-                if len(other_fieldset.fields):
-                    if len(container) and isinstance(container[0], Column):
-                        container[0].fields.append(other_fieldset)
-                    else:
-                        container.append(other_fieldset)
-
-        return layout
-
-    @filter_hook
-    def get_model_form(self, **kwargs):
-        """
-        Returns a Form class for use in the admin add view. This is used by
-        add_view and change_view.
-        """
-        if self.exclude is None:
-            exclude = []
-        else:
-            exclude = list(self.exclude)
-        if self.exclude is None and hasattr(self.form, '_meta') and self.form._meta.exclude:
-            # Take the custom ModelForm's Meta.exclude into account only if the
-            # ModelAdmin doesn't define its own.
-            exclude.extend(self.form._meta.exclude)
-        # if exclude is an empty list we pass None to be consistant with the
-        # default on modelform_factory
-        exclude = exclude or None
-        defaults = {
-            "form": self.form,
-            "fields": self.fields and list(self.fields) or '__all__',
-            "exclude": exclude,
-        }
-        defaults.update(kwargs)
-        return modelform_factory(self.model, **defaults)
-
-    @filter_hook
-    def get_form_helper(self):
-        helper = FormHelper()
-        helper.form_tag = False
-        helper.include_media = False
-        layout = self.get_form_layout()
-        replace_field_to_value(layout, self.get_field_result)
-        helper.add_layout(layout)
-        cls_str = str if six.PY3 else basestring
-        helper.filter(cls_str, max_level=20).wrap(ShowField, admin_view=self)
-        return helper
-
-    @csrf_protect_m
-    @filter_hook
-    def get(self, request, *args, **kwargs):
-        form = self.get_model_form()
-        self.form_obj = form(instance=self.obj)
-        helper = self.get_form_helper()
-        if helper:
-            self.form_obj.helper = helper
-
-        return self.get_response()
-
-    @filter_hook
-    def get_context(self):
-        new_context = {
-            'title': _('%s Detail') % force_text(self.opts.verbose_name),
-            'form': self.form_obj,
-
-            'object': self.obj,
-
-            'has_change_permission': self.has_change_permission(self.obj),
-            'has_delete_permission': self.has_delete_permission(self.obj),
-
-            'content_type_id': ContentType.objects.get_for_model(self.model).id,
-        }
-
-        context = super(DetailAdminView, self).get_context()
-        context.update(new_context)
-        return context
-
-    @filter_hook
-    def get_breadcrumb(self):
-        bcs = super(DetailAdminView, self).get_breadcrumb()
-        item = {'title': force_text(self.obj)}
-        if self.has_view_permission():
-            item['url'] = self.model_admin_url('detail', self.obj.pk)
-        bcs.append(item)
-        return bcs
-
-    @filter_hook
-    def get_media(self):
-        return super(DetailAdminView, self).get_media() + self.form_obj.media + \
-            self.vendor('xadmin.page.form.js', 'xadmin.form.css')
-
-    @filter_hook
-    def get_field_result(self, field_name):
-        return ResultField(self.obj, field_name, self)
-
-    @filter_hook
-    def get_response(self, *args, **kwargs):
-        context = self.get_context()
-        context.update(kwargs or {})
-        self.request.current_app = self.admin_site.name
-        print('self.detail_template or',self.detail_template)
-        response = TemplateResponse(self.request, self.detail_template or
-                                    self.get_template_list('views/model_detail.html'),
-                                    context)
-        return response
-
 class DetailsAdminView(ModelAdminView):
 
     form = forms.ModelForm
@@ -294,9 +144,6 @@ class DetailsAdminView(ModelAdminView):
             raise Http404(
                 _('%(name)s object with primary key %(key)r does not exist.') %
                 {'name': force_text(self.opts.verbose_name), 'key': escape(object_id)})
-        #根据obj 获取该身份证下的前12条记录
-        self.aa = self.model.objects.filter(icc_id=self.obj.icc_id)[:12]
-        # print('aa',aa)
         self.org_obj = self.obj
 
     @filter_hook
@@ -389,7 +236,6 @@ class DetailsAdminView(ModelAdminView):
             'form': self.form_obj,
 
             'object': self.obj,
-            'datalist':self.aa,
 
             'has_change_permission': self.has_change_permission(self.obj),
             'has_delete_permission': self.has_delete_permission(self.obj),
@@ -424,12 +270,11 @@ class DetailsAdminView(ModelAdminView):
         context = self.get_context()
         context.update(kwargs or {})
         self.request.current_app = self.admin_site.name
-        print('self.detail_template111',self.detail_template)
-        # xadmin / views / quick_detail.html
         response = TemplateResponse(self.request, self.detail_template or
-                                    self.get_template_list('views/quick_detail.html'),
+                                    self.get_template_list('views/model_detail.html'),
                                     context)
         return response
+
 
 class PrintAdminView(ModelAdminView):
 
@@ -733,7 +578,7 @@ class Print1AdminView(ModelAdminView):
                                     context)
         return response
 
-class DetailAdminUtil(DetailAdminView):
+class DetailAdminUtil(DetailsAdminView):
 
     def init_request(self, obj):
         self.obj = obj

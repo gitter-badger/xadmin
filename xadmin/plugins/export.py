@@ -192,7 +192,7 @@ class ExportPlugin(BaseAdminPlugin):
                         jfsum=jfsum+int(d1[j])
                 print('datalist',datalist)
                 returndata.append(datalist)
-        pjjf = jfsum/months
+        pjjf = jfsum/12#months 没12个月也除以12
         if pjjf>=600 and pjjf<650:
             lilv=5
         elif  pjjf>=650 and pjjf<700:

@@ -10,6 +10,7 @@ PLUGINS = (
     'details',
     'editable',
     'printable',
+    'itemdetail',
     'relate',
     'chart',
     'ajax',

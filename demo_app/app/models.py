@@ -440,6 +440,7 @@ class litreat(models.Model):
     # cust = models.ForeignKey(customer, on_delete=models.CASCADE, verbose_name="customer")
     yearm = models.CharField(max_length=20, verbose_name="记录年月")#models.DateField( auto_now_add=False, verbose_name="记录年月")#
     icc_id = models.CharField(max_length=50, verbose_name="身份证号")
+    avg_acc = models.IntegerField(verbose_name="月均积分", default=0)
     nowm_acc = models.IntegerField(verbose_name="本月积分",default=0)
     all_acc = models.IntegerField(verbose_name="总积分/贡献度",default=0)
     con_num = models.CharField(max_length=50, verbose_name="账号")
@@ -479,6 +480,58 @@ class litreat(models.Model):
         verbose_name = u"用户记录"
         verbose_name_plural = verbose_name
         unique_together = ('yearm','icc_id')
+
+@python_2_unicode_compatible
+class printinfo(models.Model):
+    acc_detail = models.TextField( verbose_name="打印信息",null=True,blank=True)
+    opdate = models.DateTimeField( auto_now_add=True)
+
+
+@python_2_unicode_compatible
+class litreatCollect(models.Model):
+    # UPLOAD_PATH_IMAGE = 'upload/image/'
+    # cust = models.ForeignKey(customer, on_delete=models.CASCADE, verbose_name="customer")
+    # yearm = models.CharField(max_length=20, verbose_name="记录年月")#models.DateField( auto_now_add=False, verbose_name="记录年月")#
+    icc_id = models.CharField(max_length=50, verbose_name="身份证号")
+    avg_acc = models.IntegerField(verbose_name="月均积分",default=0)
+    all_acc = models.IntegerField(verbose_name="总积分/贡献度",default=0)
+    con_num = models.CharField(max_length=50, verbose_name="账号")
+    open_ins = models.CharField(max_length=50, verbose_name="开户机构",null=True,blank=True)
+    open_no = models.CharField(max_length=50, verbose_name="开户机构号")
+    # open_ins = models.ForeignKey(groupinfo, on_delete=models.CASCADE, verbose_name="开户机构")
+    cust_name = models.CharField(max_length=20, verbose_name="客户名")
+    jy_count = models.IntegerField(verbose_name="卡交易笔数",default=0)
+    jy_num = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="卡交易金额",default=0)
+    day_avg = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="日均",default=0)
+    all_jy_count = models.IntegerField(verbose_name="总交易笔数",default=0)
+    all_jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="总交易金额",default=0.0)
+    is_life = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="百富生活圈折扣",default=9.6)#(default=False, verbose_name="百富生活圈折扣")
+    # jnlx_num = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="缴纳利息",default=0)
+    is_show = models.BooleanField(default=False, verbose_name="是否展示易拉宝")
+    is_ontime = models.BooleanField(default=True, verbose_name="是否按时还款")
+    # can_use_acc = models.IntegerField(verbose_name="可用积分",default=0)
+    # used_acc = models.IntegerField(verbose_name="本月消费积分",default=0)
+    # acc_detail = models.CharField(max_length=1204, verbose_name="积分消费详情",null=True,blank=True)
+    is_quit = models.BooleanField(default=False, verbose_name="是否清退")
+    # is_bak = models.BooleanField(default=False, verbose_name="是否")
+    ts_count = models.IntegerField(verbose_name="投诉次数", default=0)
+    # date = models.DateTimeField( auto_now_add=True)#,input_formats=['%d/%m/%Y  %H:%M:%S','%d/%m/%Y  %H:%M:%S',
+    # train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
+    # item = models.ForeignKey(treatment_item, on_delete=models.CASCADE)
+
+    # prov = models.ForeignKey(provider, on_delete=models.CASCADE, verbose_name="provider")
+
+    def __str__(self):
+        return str(self.id)#+' '+self.last_name
+
+    # def cost(self):
+    #     #简单计算
+    #     return str(self.nowm_acc+self.nowm_acc)
+
+    class Meta:
+        verbose_name = u"用户汇总"
+        verbose_name_plural = verbose_name
+        unique_together = ('icc_id','cust_name')
 
 
 

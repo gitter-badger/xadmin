@@ -99,11 +99,11 @@ class ExportMenuPlugin1(BaseAdminPlugin):
                     if j==2:
                         #姓名
 
-                        if name !='' and name!=d1[3]:
+                        if name !='' and name!=d1[2]:
                             print('name q11111',name,j,d1)
                             msg['code']='err'
                             msg['msg']='不止一个人'
-                        name=d1[3]
+                        name=d1[2]
                     if j==1:
                         #本月积分  每行取当月积分累加
 
@@ -134,8 +134,18 @@ class ExportMenuPlugin1(BaseAdminPlugin):
             lilv=35
         elif  pjjf>=950:
             lilv=40
-        replacedata = {'_name_': name, '_month_':months, '_lilv_': str(lilv)+'%'}
+        #获取编号 有个序列
+        no='002'
+
+        replacedata = {'_name_': name, '_month_':months, '_lilv_': str(lilv)+'%','no':no}
+        print('datas', datas)
         print('replacedata',replacedata)
+        #todo 入库 更新no编号
+        from app.models import printinfo
+        a = printinfo(acc_detail=replacedata)
+        a.save()
+        replacedata['no'] = a.id
+        print('1212replacedata:', replacedata)
         return returndata,replacedata,msg
     def _format_value(self, o):
         if (o.field is None and getattr(o.attr, 'boolean', False)) or \
@@ -267,7 +277,7 @@ class ExportMenuPlugin1(BaseAdminPlugin):
             formatted_today = str(today.year) + '年' + str(today.month) + '月' + str(today.day) + '日'
             # if msg['code'] == 'err':
             #     return msg
-            return render(response, 'print_card.html', {"formatted_today":formatted_today,"datas": datas, 'name': replacedata['_name_'], 'month': replacedata['_month_'], 'lilv': replacedata['_lilv_'],'msg':msg['msg']})
+            return render(response, 'print_card.html', {"formatted_today":formatted_today,"datas": datas, 'name': replacedata['_name_'], 'month': replacedata['_month_'], 'lilv': replacedata['_lilv_'],'no': replacedata['no'],'msg':msg['msg']})
 
 site.register_plugin(ExportMenuPlugin1, ListAdminView)
 

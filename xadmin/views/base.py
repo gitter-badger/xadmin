@@ -529,7 +529,7 @@ class ModelAdminView(CommAdminView):
         model = self.model
         try:
             object_id = model._meta.pk.to_python(object_id)
-            return model.objects.get(pk=object_id)
+            return model.objects.get(pk=object_id)#model.objects.filter(icc_id='362321195555555567').first()#
         except (model.DoesNotExist, ValidationError):
             return None
 

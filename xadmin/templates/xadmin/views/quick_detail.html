@@ -1,4 +1,152 @@
 {% load i18n %}
 {% load xadmin_tags %}
 {% load crispy_forms_tags %}
-{% crispy form %}
+<table class="table table-bordered table-striped table-hover">
+
+    <thead>
+      <tr>
+
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                记录年月
+            </div>
+
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                客户名
+            </div>
+
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                身份证号
+            </div>
+        </th>
+
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                本月积分
+            </div>
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                百富生活圈折扣
+            </div>
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                交易笔数
+            </div>
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                交易金额
+            </div>
+        </th>
+
+        <th scope="col" class="sortable">
+
+            <div class="dropdown pull-left">
+                是否展示易拉宝
+            </div>
+
+        </th>
+        <th scope="col" class="sortable">
+
+
+            <div class="dropdown pull-left">
+                是否按时还款
+            </div>
+
+        </th>
+      </tr>
+    </thead>
+
+
+    <tbody>
+     {% for data in datalist %}
+      <tr class="grid-item">
+
+
+        <td>
+            {{data.yearm}}
+
+        </td>
+
+        <td>
+
+
+            {{data.cust_name}}
+
+        </td>
+
+\\\\\\\\\\\\\\\\\\\\\\\        <td>
+
+{{data.icc_id}}
+
+        </td>
+
+        <td>
+
+            {{data.nowm_acc}}
+
+        </td>
+
+        <td>
+
+{{data.is_life}}
+
+
+        </td>
+
+        <td>
+
+
+            {{data.jy_count}}
+
+        </td>
+
+        <td>
+
+
+            {{data.jy_num}}
+
+        </td>
+
+
+
+        <td>
+
+{% if data.is_show %}
+     <i class="fa fa-check-circle text-success" alt="True"></i>
+    {% else %}
+            <i class="fa fa-times-circle text-error" alt="False"></i>
+{% endif %}
+
+
+        </td>
+
+        <td>
+
+
+
+{% if data.is_ontime %}
+     <i class="fa fa-check-circle text-success" alt="True"></i>
+    {% else %}
+            <i class="fa fa-times-circle text-error" alt="False"></i>
+{% endif %}
+            210-012
+08
+        </td>
+6++++++++++++++++++++++++++++++++++
+          5---7      </tr>
+     {%endfor%}
+
+    </tbody>
+
+  </table>
+<!--{% crispy form %}-->
+<script>
+    $(".edit-btn").hide();
+</script>
