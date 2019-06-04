@@ -5,7 +5,7 @@ import xlrd
 
 import xadmin
 from xadmin import views
-from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord,ccpa,xss,kmChoices,customer,treatment_item,fund,groupinfo,litreat,litreatCollect,usergroupinfo
+from .models import IDC, Host, MaintainLog, HostGroup, AccessRecord,ccpa,xss,kmChoices,customer,treatment_item,fund,groupinfo,litreat,usergroupinfo
 from xadmin.layout import Main, TabHolder, Tab, Fieldset, Row, Col, AppendedText, Side
 from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction
