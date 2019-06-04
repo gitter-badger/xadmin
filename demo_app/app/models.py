@@ -453,7 +453,7 @@ class litreat(models.Model):
     day_avg = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="日均",default=0)
     all_jy_count = models.IntegerField(verbose_name="总交易笔数",default=0)
     all_jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="总交易金额",default=0.0)
-    is_life = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="百富生活圈折扣",default=9.6)#(default=False, verbose_name="百富生活圈折扣")
+    is_life = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="百富生活圈折扣",default=0.0)#(default=False, verbose_name="百富生活圈折扣")
     jnlx_num = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="缴纳利息",default=0)
     is_show = models.BooleanField(default=False, verbose_name="是否展示易拉宝")
     is_ontime = models.BooleanField(default=True, verbose_name="是否按时还款")
@@ -477,7 +477,7 @@ class litreat(models.Model):
         return str(self.nowm_acc+self.nowm_acc)
 
     class Meta:
-        verbose_name = u"用户记录"
+        verbose_name = u"客户信息"
         verbose_name_plural = verbose_name
         unique_together = ('yearm','icc_id')
 

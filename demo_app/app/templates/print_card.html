@@ -40,6 +40,11 @@
             font-size: 16px;
         }
 
+        table {
+
+            font-size: 16px;
+        }
+
         .table tr td {
             border: 1px solid #000000;
             valign: "middle";
@@ -70,8 +75,7 @@
                                         <h2 align="center">{{name}}贷款利率综合评分</h2>
                                         <br>
 
-                                        <p>根据最近{{month}}月以来我行综合评分计算，{{name}}的贷款利率浮动值为：{{lilv}}</p>
-                                        <p>参考数据如下：</p>
+                                         <!--<p>参考数据如下：</p>-->
                                     </td>
 
                                 </tr>
@@ -82,18 +86,84 @@
                                     <td >
                                         <table class="table" width="100%"
                                                style="border:1px solid #000000;border-collapse: collapse;vertical-align:middle ;">
-                                            {% for item in datas%}
+                                            <!--{% for item in datas%}-->
+                                            <!--<tr align="center">-->
+                                                <!--{% for it in item%}-->
+                                                <!--<td  style="vertical-align:middle ;">{{it}}</td>-->
+                                                <!--{%endfor%}-->
+                                            <!--</tr>-->
+                                            <!--{%endfor%}-->
+                                            <tr align="center"> <td colspan="4">用户基本信息</td></tr>
                                             <tr align="center">
-                                                {% for it in item%}
-                                                <td  style="vertical-align:middle ;">{{it}}</td>
-                                                {%endfor%}
+                                                <td>查询日期：</td><td>{{formatted_today}}</td>
+                                                <td>卡号：</td><td>{{newdata.con_num}}</td>
                                             </tr>
-                                            {%endfor%}
+                                            <tr align="center">
+                                                <td>客户名称：</td><td>{{newdata.cust_name}}</td>
+                                                <td>证件类型：</td><td>公民身份证</td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>证件号码：</td><td>{{newdata.icc_id}}</td>
+                                                <td>国籍：</td><td></td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>开户机构：</td><td>
+                                                {%if newdata.open_ins %}
+
+                                                {{newdata.open_ins}}
+                                                {%endif%}
+                                            </td>
+                                                <td>民族：</td><td></td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>月均贡献度：</td><td>{{newdata.avg_acc}}</td>
+                                                <td>总贡献度：</td><td>{{newdata.all_acc}}</td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>居住地址：</td><td colspan="3"></td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>婚姻状况：</td><td></td>
+                                                <td></td><td></td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>最高学位：</td><td></td>
+                                                <td>最高学历：</td><td></td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>政治面貌：</td><td></td>
+                                                <td>职业：</td><td></td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>身体状况：</td><td></td>
+                                                <td>居住状况：</td><td></td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>家庭年收入：</td><td></td>
+                                                <td>是否优质商户：</td><td>
+                                                {% if newdata.is_life == "0.0" %}
+                                                    否
+                                                {%else%}
+                                                是
+                                                {%endif%}
+                                            </td>
+                                            </tr>
+                                            <tr align="center">
+                                                <td>红黑名单：</td><td></td>
+                                                <td></td><td></td>
+                                            </tr>
                                         </table>
                                     </td>
 
                                 </tr>
-                                 <tr>
+                                <tr>
+                                    <td >
+
+                                         <p>该用户{% if newdata.is_life == "0.0" %}不{%endif%}属于我行优质商户，根据以上用户信息得出该用户代理利率浮动值为：{{lilv}}</p>
+                                    </td>
+
+                                </tr>
+                                <tr>
                                     <td align="right">
                                         {{formatted_today}}
                                     </td>
@@ -101,8 +171,10 @@
 
                                  <tr>
                                     <td align="right"  >
+                                        <div style="position: fixed;right:10px;bottom:10px;">
+                                        <img width="100px" height="100px" src="/media/upload/image/yinzhang.png"/>
+                                        </div>
 
-                                盖章
                                     </td>
                                 </tr>
                             </table>

@@ -11,6 +11,7 @@ from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction
 import datetime
 import calendar
+from django.db.models import Avg
 import time
 #
 # @xadmin.sites.register(views.website.IndexView)
@@ -733,12 +734,17 @@ def updatejf(yearmonth,icc_list):
     print('更新月份积分yearmonth',yearmonth)
     tmp_list = icc_list
     for col in icc_list:
-        aa = litreat.objects.filter(yearm=yearmonth,icc_id=col).first()
+        aa = litreat.objects.filter(yearm=yearmonth, icc_id=col)
+        print('aaaaa',len(aa))
+        if len(aa)==0:
+            continue
+        aa = litreat.objects.filter(yearm=yearmonth,icc_id=col)[0]#.first()
         #计算本条积分，更新表字段
         # 生活圈按折扣对应积分
         zkjf={'10.00-9.60':0,'9.60-9.20':100,'9.20-8.80':120,'8.80-8.00':130,'8.00-7.00':150,'7.00-6.50':180,'6.50-0.00':200,}
         lifezk = '10.00-9.60'
         nowjf = 0
+        print('aa1212',aa)
         if aa.is_life:
 
             for key in zkjf:
@@ -783,6 +789,22 @@ def updatejf(yearmonth,icc_list):
             all_acc=alljf,
             can_use_acc=kyjf,
         )
+        # 更新月均积分值 avg_acc
+        startTime1 = datetime.datetime.strptime(yearmonth, '%Y-%m')
+        # 前一个月最后一天
+        pre_month1 = startTime1.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
+        # startTime1 = datetime.datetime.strptime(pre_month1, '%Y-%m')
+        for i in range(1, 11):
+            pre_month1 = pre_month1.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
+            # startTime1 = datetime.datetime.strptime(pre_month1, '%Y-%m')
+        endym = datetime.datetime.strftime(pre_month1, "%Y-%m")
+        print('1111yearmonth', yearmonth, 'pre_month1', pre_month1, 'endym', endym)
+        avgjf = litreat.objects.filter(yearm__lte=yearmonth, yearm__gte=endym, icc_id=col).aggregate(Avg('nowm_acc'))
+
+        print('1111yearmonth', yearmonth, 'pre_month1', pre_month1, 'avgjf', avgjf)
+        litreat.objects.filter(yearm=yearmonth, icc_id=col).update(
+            avg_acc=avgjf['nowm_acc__avg'],
+        )
     #获取当前月及12月前时间，判断yearmonth+1个月是否小于当前年月且在当前年月前12个月内，则操作
     startTime = datetime.datetime.strptime(yearmonth, '%Y-%m')
     # 前一个月最后一天
@@ -795,6 +817,8 @@ def updatejf(yearmonth,icc_list):
     print(u'后一个月的第一天:' + str(first_day_of_next_month))
     if first_day_of_next_month<datetime.datetime.now():
         updatejf(next_month_str, tmp_list)
+
+
 
 
 #

@@ -60,8 +60,11 @@ class ExportMenuPlugin1(BaseAdminPlugin):
         datetime_now = datetime.datetime.now()
         datetime_three_month_ago = datetime_now - relativedelta(months=3)
         untilMonth = datetime_three_month_ago.strftime('%Y-%m')
+        maxMonth = untilMonth
+        tmpicc = ''
         print(datetime_now,'datetime_three_month_ago',datetime_three_month_ago,untilMonth)
         #年月 身份证 名字 账号 开户行 本月积分
+        #'记录年月', '客户名', '身份证号', '总积分/贡献度', '月均积分', '百富生活圈折扣', '交易笔数', '交易金额', '日均', '总交易笔数', '总交易金额', '是否展示易拉宝', '是否按时还款'
         limitlist=['记录年月', '身份证号', '客户名', '账号', '开户机构', '本月积分',]
 
         limitidlist=[]
@@ -88,9 +91,13 @@ class ExportMenuPlugin1(BaseAdminPlugin):
                 returndata.append(headlist)
             else:
                 datalist=[]
+                print('1111d1',d1)
                 if d1[1] >= untilMonth:
                     months = months + 1
                     print('计算了', i, '个月')
+                if d1[1]>maxMonth:
+                    maxMonth = d1[1]
+                    tmpicc = d1[3]
                 # else:
 
                 for j in limitidlist:
@@ -112,11 +119,22 @@ class ExportMenuPlugin1(BaseAdminPlugin):
                             jfsum = jfsum + int(d1[4])
                         else:
                             print(d1, 'abcd', j)
+                    if d1[0] >= untilMonth:
+                        maxMonth= d1[0]
+                        tmpicc=d1[1]
 
 
                 print('datalist',datalist)
                 returndata.append(datalist)
+        #根据最新年月和证件号查询最新一条数据，做为表格数据填写
+        from app.models import litreat
+        print('maxMonth',maxMonth,'tmpicc',tmpicc)
+        newdata=litreat.objects.filter(yearm=maxMonth,icc_id=tmpicc)
+        print('newdata',newdata,'tmpicc',tmpicc,'newdata[0].avg_acc',newdata[0].avg_acc)
         pjjf = jfsum/months
+        #重新获取月均积分
+        pjjf = newdata[0].avg_acc
+
         print(' pjjf = jfsum/months', pjjf,jfsum,months)
         if pjjf>=600 and pjjf<650:
             lilv=5
@@ -137,7 +155,7 @@ class ExportMenuPlugin1(BaseAdminPlugin):
         #获取编号 有个序列
         no='002'
 
-        replacedata = {'_name_': name, '_month_':months, '_lilv_': str(lilv)+'%','no':no}
+        replacedata = {'_name_': name, '_month_':months, '_lilv_': str(lilv)+'%','no':no,'newdata':newdata[0]}
         print('datas', datas)
         print('replacedata',replacedata)
         #todo 入库 更新no编号
@@ -277,7 +295,7 @@ class ExportMenuPlugin1(BaseAdminPlugin):
             formatted_today = str(today.year) + '年' + str(today.month) + '月' + str(today.day) + '日'
             # if msg['code'] == 'err':
             #     return msg
-            return render(response, 'print_card.html', {"formatted_today":formatted_today,"datas": datas, 'name': replacedata['_name_'], 'month': replacedata['_month_'], 'lilv': replacedata['_lilv_'],'no': replacedata['no'],'msg':msg['msg']})
+            return render(response, 'print_card.html', {"newdata":replacedata['newdata'],"formatted_today":formatted_today,"datas": datas, 'name': replacedata['_name_'], 'month': replacedata['_month_'], 'lilv': replacedata['_lilv_'],'no': replacedata['no'],'msg':msg['msg']})
 
 site.register_plugin(ExportMenuPlugin1, ListAdminView)
 
