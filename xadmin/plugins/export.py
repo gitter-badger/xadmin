@@ -153,7 +153,7 @@ class ExportPlugin(BaseAdminPlugin):
 
     def formdata(self,datas):
         print('datas',datas)
-        #年月 身份证 名字 账号 开户行 本月积分
+        #年月 身份证 名字 账号 开户行 本月贡献度
         limitlist=['记录年月', '身份证号', '客户名', '账号', '开户机构', '本月积分',]
 
         limitidlist=[]

@@ -103,6 +103,7 @@ class ListAdminView(ModelAdminView):
     Display models objects view. this class has ordering and simple filter features.
     """
     list_display = ('__str__',)
+    list_x_display = []
     list_display_links = ()
     list_display_links_details = False
     list_select_related = None
@@ -152,6 +153,7 @@ class ListAdminView(ModelAdminView):
         """
         self.base_list_display = (COL_LIST_VAR in self.request.GET and self.request.GET[COL_LIST_VAR] != "" and
                                   self.request.GET[COL_LIST_VAR].split('.')) or self.list_display
+        # print('list(self.base_list_display)',list(self.base_list_display))
         return list(self.base_list_display)
 
     @filter_hook
@@ -379,6 +381,8 @@ class ListAdminView(ModelAdminView):
             'clean_select_field_url': self.get_query_string(remove=[COL_LIST_VAR]),
             'has_add_permission': self.has_add_permission(),
             'app_label': self.app_label,
+            'list_x_display':self.list_x_display,
+            'is_superuser':self.user.is_superuser,
             'brand_name': self.opts.verbose_name_plural,
             'brand_icon': self.get_model_icon(self.model),
             'add_url': self.model_admin_url('add'),
@@ -598,6 +602,8 @@ class ListAdminView(ModelAdminView):
         results = []
         for obj in self.result_list:
             results.append(self.result_row(obj))
+        # print('self.result_list',self.result_list)
+        # print('results',results)
         return results
 
     @filter_hook

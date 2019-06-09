@@ -155,7 +155,17 @@ class ExportMenuPlugin1(BaseAdminPlugin):
         #获取编号 有个序列
         no='002'
 
-        replacedata = {'_name_': name, '_month_':months, '_lilv_': str(lilv)+'%','no':no,'newdata':newdata[0]}
+        #判断是否优质客户 是否优质商户判断
+        #三次投诉、三次逾期还款、踢出生活圈、是否生活圈商户 为否即折扣为0、是否优质商户 满足其一就是否
+        good = True
+        if newdata[0].ts_count>=3 or not newdata[0].is_ontime or newdata[0].is_quit or newdata[0].is_life<0.01:
+            print('newdata[0].ts_count>=3',newdata[0].ts_count>=3,' or not newdata[0].is_ontime',not newdata[0].is_ontime,' or newdata[0].is_quit',newdata[0].is_quit,' or newdata[0].is_life<0.01',(newdata[0].is_life<0.01),'abc',
+            newdata[0].ts_count,newdata[0].is_ontime,newdata[0].is_quit,newdata[0].is_life)
+            good = False
+        else:
+            print('aaanewdata[0].ts_count>=3 or not newdata[0].is_ontime or newdata[0].is_quit or newdata[0].is_life<0.01',
+                  newdata[0].ts_count, newdata[0].is_ontime, newdata[0].is_quit, newdata[0].is_life)
+        replacedata = {'good': good,'_name_': name, '_month_':months, '_lilv_': str(lilv)+'%','no':no,'newdata':newdata[0]}
         print('datas', datas)
         print('replacedata',replacedata)
         #todo 入库 更新no编号
@@ -295,7 +305,7 @@ class ExportMenuPlugin1(BaseAdminPlugin):
             formatted_today = str(today.year) + '年' + str(today.month) + '月' + str(today.day) + '日'
             # if msg['code'] == 'err':
             #     return msg
-            return render(response, 'print_card.html', {"newdata":replacedata['newdata'],"formatted_today":formatted_today,"datas": datas, 'name': replacedata['_name_'], 'month': replacedata['_month_'], 'lilv': replacedata['_lilv_'],'no': replacedata['no'],'msg':msg['msg']})
+            return render(response, 'print_card.html', {"newdata":replacedata['newdata'],"formatted_today":formatted_today,"datas": datas, 'name': replacedata['_name_'], 'month': replacedata['_month_'], 'lilv': replacedata['_lilv_'],'good':replacedata['good'],'no': replacedata['no'],'msg':msg['msg']})
 
 site.register_plugin(ExportMenuPlugin1, ListAdminView)
 

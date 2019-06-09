@@ -440,9 +440,9 @@ class litreat(models.Model):
     # cust = models.ForeignKey(customer, on_delete=models.CASCADE, verbose_name="customer")
     yearm = models.CharField(max_length=20, verbose_name="记录年月")#models.DateField( auto_now_add=False, verbose_name="记录年月")#
     icc_id = models.CharField(max_length=50, verbose_name="身份证号")
-    avg_acc = models.IntegerField(verbose_name="月均积分", default=0)
+    avg_acc = models.IntegerField(verbose_name="月均贡献度", default=0)
     nowm_acc = models.IntegerField(verbose_name="本月积分",default=0)
-    all_acc = models.IntegerField(verbose_name="总积分/贡献度",default=0)
+    all_acc = models.IntegerField(verbose_name="总贡献度",default=0)
     con_num = models.CharField(max_length=50, verbose_name="账号")
     open_ins = models.CharField(max_length=50, verbose_name="开户机构",null=True,blank=True)
     open_no = models.CharField(max_length=50, verbose_name="开户机构号")

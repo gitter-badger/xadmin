@@ -1,0 +1,9 @@
+检查版本
+D:\PycharmProjects\src\req.txt
+更新
+src\xadmin\views\details.py
+D:\PycharmProjects\src\demo_app\app\adminx.py
+D:\PycharmProjects\xadmin2\demo_app\app\templates\print_card.html
+D:\PycharmProjects\xadmin2\xadmin\plugins\export1.py
+D:\PycharmProjects\xadmin2\xadmin\templates\xadmin\views\model_list.html
+D:\PycharmProjects\xadmin2\xadmin\views\list.py

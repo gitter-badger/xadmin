@@ -537,6 +537,8 @@ class PrintAdminView(ModelAdminView):
 
     @filter_hook
     def get_context(self):
+
+
         new_context = {
             'title': _('%s Detail') % force_text(self.opts.verbose_name),
             'form': self.form_obj,
@@ -576,7 +578,7 @@ class PrintAdminView(ModelAdminView):
         context = self.get_context()
         context.update(kwargs or {})
         self.request.current_app = self.admin_site.name
-        print('context',context)
+
         response = TemplateResponse(self.request,
                                     self.get_template_list('views/print_card.html'),
                                     context)

@@ -42,18 +42,18 @@
 
         table {
 
-            font-size: 16px;
+            font-size: 12px;
         }
 
         .table tr td {
-            border: 1px solid #000000;
+            border: 0.1px solid #000000;
             valign: "middle";
             /*vertical-align: top; *!*/
             vertical-align: middle;
         }
 
         .table tr {
-            height: 40px;
+            height: 30px;
             width: 100%
         }
     </style>
@@ -141,10 +141,10 @@
                                             <tr align="center">
                                                 <td>家庭年收入：</td><td></td>
                                                 <td>是否优质商户：</td><td>
-                                                {% if newdata.is_life == "0.0" %}
-                                                    否
+                                                {% if good %}
+                                                    是
                                                 {%else%}
-                                                是
+                                                否
                                                 {%endif%}
                                             </td>
                                             </tr>
@@ -158,25 +158,29 @@
                                 </tr>
                                 <tr>
                                     <td >
-
-                                         <p>该用户{% if newdata.is_life == "0.0" %}不{%endif%}属于我行优质商户，根据以上用户信息得出该用户代理利率浮动值为：{{lilv}}</p>
+                                        <br>
+                                         <p>该用户{% if not good  %}不{%endif%}属于我行优质商户，根据以上用户信息得出该用户代理利率浮动值为：{{lilv}}</p>
+                                        <br>
                                     </td>
 
                                 </tr>
                                 <tr>
                                     <td align="right">
                                         {{formatted_today}}
-                                    </td>
-                                </tr>
-
-                                 <tr>
-                                    <td align="right"  >
-                                        <div style="position: fixed;right:10px;bottom:10px;">
+                                         <div style="margin: -20px 0 0 0" >
                                         <img width="100px" height="100px" src="/media/upload/image/yinzhang.png"/>
                                         </div>
-
                                     </td>
                                 </tr>
+
+                                 <!--<tr>-->
+                                    <!--<td align="right"  >-->
+                                        <!--<div >-->
+                                        <!--<img width="100px" height="100px" src="/media/upload/image/yinzhang.png"/>-->
+                                        <!--</div>-->
+
+                                    <!--</td>-->
+                                <!--</tr>-->
                             </table>
 
                         </td>

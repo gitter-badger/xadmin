@@ -82,6 +82,8 @@ class groupinfoAdmin(object):
 @xadmin.sites.register(litreat)
 class litreatAdmin(object):
     list_display = [ "yearm","cust_name","icc_id","all_acc","avg_acc","is_life","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime",]
+    list_x_display = ["is_life","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime", ]
+
     detailitem = ['all_acc']
 
     # show_detail_fields = ['all_acc']
@@ -125,7 +127,23 @@ class litreatAdmin(object):
             print('aa',aa,aa.group.all())
             for a in aa.group.all():
                 groupidlist.append(a.group_no)
-        queryset = queryset.filter(open_no__in=groupidlist)
+        print('0queryset',queryset.values())
+        queryset = queryset.filter(open_no__in=groupidlist)#.all().only('jy_count')
+        # import copy
+        # d = copy.deepcopy(queryset)  # 对象拷贝，深拷贝
+        # print('1queryset', d.values())
+        # for aa in d.values():
+        #     print('aa',aa)
+        #     for aaa in aa:
+        #         print('aaa',aaa)
+        #         if aaa =='jy_count':
+        #             print('中财',aa[aaa])
+        #             aa[aaa] = '*'
+        #             print('中财1',aa[aaa])
+        #
+        #     print('1aa',aa)
+        # print('1queryset', d.values())
+
         return queryset
 
     def post(self, request, *args, **kwargs):
@@ -744,7 +762,7 @@ def updatejf(yearmonth,icc_list):
         zkjf={'10.00-9.60':0,'9.60-9.20':100,'9.20-8.80':120,'8.80-8.00':130,'8.00-7.00':150,'7.00-6.50':180,'6.50-0.00':200,}
         lifezk = '10.00-9.60'
         nowjf = 0
-        print('aa1212',aa)
+        print('aa1212',aa,aa.is_life)
         if aa.is_life:
 
             for key in zkjf:
@@ -765,6 +783,15 @@ def updatejf(yearmonth,icc_list):
                     + (int(aa.jnlx_num/500) if(int(aa.jnlx_num/500)<200)else 200) \
                     + aa.is_show*100
             print(aa.icc_id,'nowjf',nowjf)
+        else:
+            nowjf = (aa.all_jy_count * 1 if (aa.all_jy_count * 1 < 200) else 200) + (
+                int(aa.all_jy_num / 100) if (int(aa.all_jy_num / 100) < 300) else 300) \
+                    + (int(aa.day_avg / 1000) if (int(aa.day_avg / 1000) < 200) else 200) \
+                    + (int(aa.jy_count / 1) if (int(aa.jy_count / 1) < 10) else 10) \
+                    + (int(aa.jy_num / 100) if (int(aa.jy_num / 100) < 10) else 10) \
+                    + (int(aa.jnlx_num / 500) if (int(aa.jnlx_num / 500) < 200) else 200) \
+                    + aa.is_show * 100
+            print(aa.icc_id, 'nowjf', nowjf)
 
         alljf = nowjf
         #总积分=year.months-1.id.总积分+本月积分-（year.months-1.id.是否展示易拉宝）*100-（year.months-1.id.是否生活圈）*100

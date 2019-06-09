@@ -111,6 +111,9 @@
     {% endblock results_grid_head %}
     {% block results_grid_body %}
     <tbody>
+
+  <tr>
+
     {% for row in results %}
       <tr class="grid-item{% if row.css_class %} {{row.css_class}}{%endif%}" {{ row.tagattrs }}>{% for o in row.cells %}
         <td {{o.tagattrs}}>
@@ -124,7 +127,7 @@
           {% if o.menus %}
             <div class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                {{ o.label }}
+               {{ o.label }}
               </a>
               <ul class="dropdown-menu">
                 {% for m in o.menus %}
@@ -133,7 +136,11 @@
               </ul>
             </div>
           {% else %}
-            {{ o.label }}
+          {% if o.field|cut:'app.litreat.' in list_x_display  and not is_superuser %}
+            ***
+            {% else %}
+               {{ o.label }}
+          {% endif %}
           {% endif %}
         </td>
       {% endfor %}</tr>
