@@ -13,6 +13,7 @@ import datetime
 import calendar
 from django.db.models import Avg
 import time
+from django.conf import settings
 #
 # @xadmin.sites.register(views.website.IndexView)
 # class MainDashboard(object):
@@ -146,10 +147,20 @@ class litreatAdmin(object):
 
         return queryset
 
+
+    def doexcel(self, request, *args, **kwargs):
+        print('doexcel')
+
+
     def post(self, request, *args, **kwargs):
         #  导入逻辑
         if 'excel' in request.FILES:
-            print('excel',request.FILES,'month',request.POST.get('month'))
+            file = self.request.FILES['excel']
+            url = settings.BASE_DIR + '/upload/excel/' + file.name
+            with open(url, 'wb')as f:
+                for data in file.chunks():
+                    f.write(data)
+            print('121212excel',request.FILES,'month',request.POST.get('month'))
             opmonth = request.POST.get('month')
             wb = xlrd.open_workbook(
                 filename=None, file_contents=request.FILES['excel'].read())  # 关键点在于这里
