@@ -463,6 +463,8 @@ class litreat(models.Model):
     is_quit = models.BooleanField(default=False, verbose_name="是否清退")
     # is_bak = models.BooleanField(default=False, verbose_name="是否")
     ts_count = models.IntegerField(verbose_name="投诉次数", default=0)
+    all_12jy_count = models.IntegerField(verbose_name="交易总笔数",default=0)
+    all_12jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="交易总金额",default=0.0)
     # date = models.DateTimeField( auto_now_add=True)#,input_formats=['%d/%m/%Y  %H:%M:%S','%d/%m/%Y  %H:%M:%S',
     # train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
     # item = models.ForeignKey(treatment_item, on_delete=models.CASCADE)

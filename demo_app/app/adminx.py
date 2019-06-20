@@ -11,9 +11,10 @@ from xadmin.plugins.inline import Inline
 from xadmin.plugins.batch import BatchChangeAction
 import datetime
 import calendar
-from django.db.models import Avg
+from django.db.models import Avg,Sum
 import time
 from django.conf import settings
+import threading
 #
 # @xadmin.sites.register(views.website.IndexView)
 # class MainDashboard(object):
@@ -54,7 +55,17 @@ class MaintainInline(object):
     extra = 1
     style = "accordion"
 
+import os,shutil
 
+def mymovefile(srcfile,dstfile):
+    if not os.path.isfile(srcfile):
+        print("%s not exist!"%(srcfile))
+    else:
+        fpath,fname=os.path.split(dstfile)    #分离文件名和路径
+        if not os.path.exists(fpath):
+            os.makedirs(fpath)                #创建路径
+        shutil.move(srcfile,dstfile)          #移动文件
+        print("move %s -> %s"%( srcfile,dstfile))
 
 @xadmin.sites.register(groupinfo)
 class groupinfoAdmin(object):
@@ -82,7 +93,7 @@ class groupinfoAdmin(object):
 
 @xadmin.sites.register(litreat)
 class litreatAdmin(object):
-    list_display = [ "yearm","cust_name","icc_id","all_acc","avg_acc","is_life","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime",]
+    list_display = [ "yearm","cust_name","icc_id","all_acc","avg_acc","is_life","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","all_12jy_count","all_12jy_num","is_show","is_ontime",]
     list_x_display = ["is_life","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime", ]
 
     detailitem = ['all_acc']
@@ -148,22 +159,21 @@ class litreatAdmin(object):
         return queryset
 
 
-    def doexcel(self, request, *args, **kwargs):
-        print('doexcel')
+    def doexcel(self, request,url,filename):
 
+        print('doexcel',url)
 
-    def post(self, request, *args, **kwargs):
-        #  导入逻辑
         if 'excel' in request.FILES:
             file = self.request.FILES['excel']
-            url = settings.BASE_DIR + '/upload/excel/' + file.name
-            with open(url, 'wb')as f:
-                for data in file.chunks():
-                    f.write(data)
-            print('121212excel',request.FILES,'month',request.POST.get('month'))
+            # url = settings.BASE_DIR + '/upload/excel/' + file.name
+            # with open(url, 'wb')as f:
+            #     for data in file.chunks():
+            #         f.write(data)
+            print(url,'121212excel',request.FILES,'month',request.POST.get('month'))
             opmonth = request.POST.get('month')
-            wb = xlrd.open_workbook(
-                filename=None, file_contents=request.FILES['excel'].read())  # 关键点在于这里
+            # wb = xlrd.open_workbook(
+            #     filename=None, file_contents=request.FILES['excel'].read())  # 关键点在于这里
+            wb = xlrd.open_workbook(url)
             table = wb.sheets()[0]
             row = table.nrows
             t1col = ['账号', '开户机构', '客户名', '身份证', '交易笔数', '交易金额']
@@ -314,7 +324,32 @@ class litreatAdmin(object):
             if add_litreat_list != []:
                 litreat.objects.bulk_create(add_litreat_list)
             updatejf(opmonth,op_icc_list)
+            #移动文件到
+
+            overpath = settings.BASE_DIR + '/upload/overexcel/'
+            datetimenowTime = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+            dispath=overpath+datetimenowTime+filename
+            mymovefile(url,dispath)
             pass  # 此处是一系列的操作接口, 通过  request.FILES 拿到数据随意操作
+
+
+    def post(self, request, *args, **kwargs):
+        #  导入逻辑
+        if 'excel' in request.FILES:
+            file = self.request.FILES['excel']
+            #user
+            datetimenowTime = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
+            print('self.user',self.user)
+            filename = self.user.username+datetimenowTime+ file.name
+            url = settings.BASE_DIR + '/upload/excel/' + filename
+
+            with open(url, 'wb')as f:
+                for data in file.chunks():
+                    f.write(data)
+            t = threading.Thread(target=self.doexcel, args=(request,url,filename))
+            t.setDaemon(True)
+            t.start()
+            print('线程启动了')
         # return super(litreatAdmin, self).post(request, *args, **kwargs)  # 此返回值必须是这样
         return super().post(request, *args, **kwargs)
 
@@ -770,10 +805,18 @@ def updatejf(yearmonth,icc_list):
         aa = litreat.objects.filter(yearm=yearmonth,icc_id=col)[0]#.first()
         #计算本条积分，更新表字段
         # 生活圈按折扣对应积分
-        zkjf={'10.00-9.60':0,'9.60-9.20':100,'9.20-8.80':120,'8.80-8.00':130,'8.00-7.00':150,'7.00-6.50':180,'6.50-0.00':200,}
-        lifezk = '10.00-9.60'
+        zkjf={'10.00-9.80':100,'9.80-9.00':120,'9.00-8.50':130,'8.80-8.00':130,'8.00-7.00':150,'7.00-6.00':200,'6.00-0.00':300,}
+        lifezk = '10.00-9.80'
         nowjf = 0
         print('aa1212',aa,aa.is_life)
+        good = True
+        if aa.ts_count >= 3 or not aa.is_ontime or aa.is_quit or aa.is_life < 0.01:
+            print('aa.ts_count>=3', aa.ts_count >= 3, ' or not aa.is_ontime',
+                  not aa.is_ontime, ' or aa.is_quit', aa.is_quit, ' or aa.is_life<0.01',
+                  (aa.is_life < 0.01), 'abc',
+                  aa.ts_count, aa.is_ontime, aa.is_quit, aa.is_life)
+            good = False
+            
         if aa.is_life:
 
             for key in zkjf:
@@ -787,21 +830,21 @@ def updatejf(yearmonth,icc_list):
 
             #本月积分  是否生活圈*100+Limit(交易总笔数*1,200)+Limit(int(总交易金额/100)*1,300)+Limit(int(日均/1000)*1,200)+Limit(交易笔数*1,10)+Limit(int(交易金额/100)*1,10)
             print('zkjf[lifezk]',zkjf[lifezk])
-            nowjf = zkjf[lifezk]+(aa.all_jy_count*1 if(aa.all_jy_count*1<200)else 200)+(int(aa.all_jy_num/100) if(int(aa.all_jy_num/100)<300)else 300) \
+            nowjf = zkjf[lifezk]+(aa.all_jy_count*1 if(aa.all_jy_count*1<200)else 200)+(int(aa.all_jy_num/100) if(int(aa.all_jy_num/100)<200)else 200) \
                     + (int(aa.day_avg/1000) if(int(aa.day_avg/1000)<200)else 200) \
                     + (int(aa.jy_count/1) if(int(aa.jy_count/1)<10)else 10) \
                     + (int(aa.jy_num/100) if(int(aa.jy_num/100)<10)else 10) \
                     + (int(aa.jnlx_num/500) if(int(aa.jnlx_num/500)<200)else 200) \
-                    + aa.is_show*100
+                    + aa.is_show*100  + good*30 + aa.is_ontime*50
             print(aa.icc_id,'nowjf',nowjf)
         else:
             nowjf = (aa.all_jy_count * 1 if (aa.all_jy_count * 1 < 200) else 200) + (
-                int(aa.all_jy_num / 100) if (int(aa.all_jy_num / 100) < 300) else 300) \
+                int(aa.all_jy_num / 100) if (int(aa.all_jy_num / 100) < 200) else 200) \
                     + (int(aa.day_avg / 1000) if (int(aa.day_avg / 1000) < 200) else 200) \
                     + (int(aa.jy_count / 1) if (int(aa.jy_count / 1) < 10) else 10) \
                     + (int(aa.jy_num / 100) if (int(aa.jy_num / 100) < 10) else 10) \
                     + (int(aa.jnlx_num / 500) if (int(aa.jnlx_num / 500) < 200) else 200) \
-                    + aa.is_show * 100
+                    + aa.is_show * 100 + good*30 +aa.is_ontime*50
             print(aa.icc_id, 'nowjf', nowjf)
 
         alljf = nowjf
@@ -837,11 +880,13 @@ def updatejf(yearmonth,icc_list):
             # startTime1 = datetime.datetime.strptime(pre_month1, '%Y-%m')
         endym = datetime.datetime.strftime(pre_month1, "%Y-%m")
         print('1111yearmonth', yearmonth, 'pre_month1', pre_month1, 'endym', endym)
-        avgjf = litreat.objects.filter(yearm__lte=yearmonth, yearm__gte=endym, icc_id=col).aggregate(Avg('nowm_acc'))
+        avgjf = litreat.objects.filter(yearm__lte=yearmonth, yearm__gte=endym, icc_id=col).aggregate(Sum('nowm_acc'),Sum('jy_count'),Sum('all_jy_count'),Sum('jy_num'),Sum('all_jy_num'))#Avg
 
         print('1111yearmonth', yearmonth, 'pre_month1', pre_month1, 'avgjf', avgjf)
         litreat.objects.filter(yearm=yearmonth, icc_id=col).update(
-            avg_acc=avgjf['nowm_acc__avg'],
+            avg_acc=avgjf['nowm_acc__sum']/12,
+            all_12jy_count=avgjf['jy_count__sum']+avgjf['all_jy_count__sum'],
+            all_12jy_num=avgjf['jy_num__sum']+avgjf['all_jy_num__sum'],
         )
     #获取当前月及12月前时间，判断yearmonth+1个月是否小于当前年月且在当前年月前12个月内，则操作
     startTime = datetime.datetime.strptime(yearmonth, '%Y-%m')

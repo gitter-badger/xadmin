@@ -60,6 +60,84 @@
             </div>
 
         </th>
+
+
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                账号
+            </div>
+
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                开户机构
+            </div>
+
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                开户机构号
+            </div>
+        </th>
+
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                日均
+            </div>
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                总交易笔数
+            </div>
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                总交易金额
+            </div>
+        </th>
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                缴纳利息
+            </div>
+        </th>
+
+        <!--<th scope="col" class="sortable">-->
+
+            <!--<div class="dropdown pull-left">-->
+                <!--可用积分-->
+            <!--</div>-->
+
+        <!--</th>-->
+        <!--<th scope="col" class="sortable">-->
+
+
+            <!--<div class="dropdown pull-left">-->
+                <!--本月消费积分-->
+            <!--</div>-->
+
+        <!--</th>-->
+
+        <th scope="col" class="sortable">
+            <div class="dropdown pull-left">
+                积分消费详情
+            </div>
+        </th>
+
+        <th scope="col" class="sortable">
+
+            <div class="dropdown pull-left">
+                是否清退
+            </div>
+
+        </th>
+        <th scope="col" class="sortable">
+
+
+            <div class="dropdown pull-left">
+                投诉次数
+            </div>
+
+        </th>
       </tr>
     </thead>
 
@@ -136,6 +214,100 @@
             <i class="fa fa-times-circle text-error" alt="False"></i>
 {% endif %}
         </td>
+
+
+
+
+
+
+            <td>
+            {{data.con_num}}
+
+        </td>
+
+        <td>
+
+
+            {{data.open_ins}}
+
+        </td>
+<td>
+
+{{data.open_no}}
+
+        </td>
+
+        <td>
+
+            {{data.day_avg}}
+
+        </td>
+
+        <td>
+
+{{data.all_jy_count}}
+
+
+        </td>
+
+        <td>
+
+
+            {{data.all_jy_num}}
+
+        </td>
+
+        <td>
+
+
+            {{data.jnlx_num}}
+
+        </td>
+
+
+
+        <!--<td>-->
+
+            <!--{{data.can_use_acc}}-->
+
+
+
+        <!--</td>-->
+
+        <!--<td>-->
+
+
+            <!--{{data.used_acc}}-->
+
+        <!--</td>-->
+
+        <td>
+
+
+            {{data.acc_detail}}
+
+        </td>
+
+
+
+        <td>
+
+{% if data.is_quit %}
+     <i class="fa fa-check-circle text-success" alt="True"></i>
+    {% else %}
+            <i class="fa fa-times-circle text-error" alt="False"></i>
+{% endif %}
+
+
+        </td>
+
+        <td>
+
+
+{{data.ts_count}}
+
+        </td>
+
       </tr>
      {%endfor%}
 

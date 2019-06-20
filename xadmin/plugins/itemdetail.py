@@ -81,15 +81,15 @@ class DetailablePlugin(BaseAdminPlugin):
 
     # Media
     def get_media(self, media):
-        if self.printable_need_fields:
+        # if self.printable_need_fields:
 
-            try:
-                m = self.model_form.media
-            except:
-                m = Media()
-            media = media + m +\
-                self.vendor(
-                    'xadmin.plugin.printable.js', 'xadmin.widget.printable.css')
+        try:
+            m = self.model_form.media
+        except:
+            m = Media()
+        media = media + m +\
+            self.vendor(
+                'xadmin.plugin.details.js', 'xadmin.widget.details.css')
         return media
 
 
