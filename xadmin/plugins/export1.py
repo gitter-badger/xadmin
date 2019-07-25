@@ -97,7 +97,10 @@ class ExportMenuPlugin1(BaseAdminPlugin):
                     print('计算了', i, '个月')
                 if d1[1]>maxMonth:
                     maxMonth = d1[1]
-                    tmpicc = d1[3]
+                    if len(d1[3])<18:
+                        tmpicc=d1[2]
+                    else:
+                        tmpicc = d1[3]
                 # else:
 
                 for j in limitidlist:
@@ -121,7 +124,10 @@ class ExportMenuPlugin1(BaseAdminPlugin):
                             print(d1, 'abcd', j)
                     if d1[0] >= untilMonth:
                         maxMonth= d1[0]
-                        tmpicc=d1[1]
+                        if len(d1[1]) < 18:
+                            tmpicc = d1[2]
+                        else:
+                            tmpicc=d1[1]
 
 
                 print('datalist',datalist)
@@ -130,7 +136,8 @@ class ExportMenuPlugin1(BaseAdminPlugin):
         from app.models import litreat
         print('maxMonth',maxMonth,'tmpicc',tmpicc)
         newdata=litreat.objects.filter(yearm=maxMonth,icc_id=tmpicc)
-        print('newdata',newdata,'tmpicc',tmpicc,'newdata[0].avg_acc',newdata[0].avg_acc)
+        # print('newdata',newdata,'tmpicc',tmpicc,'newdata[0].avg_acc',newdata[0].avg_acc)
+        print('newdata',newdata)
         pjjf = jfsum/months
         #重新获取月均积分
         pjjf = newdata[0].avg_acc

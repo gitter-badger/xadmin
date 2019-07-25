@@ -111,7 +111,7 @@ class litreatAdmin(object):
     list_filter = [
         "yearm","open_no"
     ]
-    list_quick_filter = [{"field": "open_ins", "limit": 10}]
+    list_quick_filter = [{"field": "open_ins", "limit": 1115}]
     # date_hierarchy = 'yearm'
     # search_fields = ["open_no"]
     reversion_enable = False
@@ -128,9 +128,10 @@ class litreatAdmin(object):
     # batch_fields = ("open_no")
 
     def get_list_queryset(self):
-        print('self.request', self.request)
+        print('self.request', self.request,self.request.GET.get('_q_',default='0'))
+        iccqry = self.request.GET.get('_q_',default='0')
         queryset = super().get_list_queryset()
-        if self.user.is_superuser:
+        if len(iccqry)==18 or self.user.is_superuser:
             return queryset
         print(self.user,'self.request.user',self.request.user)
         aa=usergroupinfo.objects.filter(userinfo=self.user).first()
