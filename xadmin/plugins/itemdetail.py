@@ -27,6 +27,7 @@ class DetailablePlugin(BaseAdminPlugin):
     def __init__(self, admin_view):
         super(DetailablePlugin, self).__init__(admin_view)
         self.printable_need_fields = {}
+        self.mylist=[]
 
     def init_request(self, *args, **kwargs):
         print('1212121',self.detailitem)
@@ -58,7 +59,10 @@ class DetailablePlugin(BaseAdminPlugin):
                     has_change_perm = self.has_model_perm(rel_obj.__class__, 'change')
 
             if rel_obj and has_view_perm:
-                print('typeof rel_obj',rel_obj,type(rel_obj))
+                print('typeof rel_obj',rel_obj,type(rel_obj),self.mylist)
+                if rel_obj in self.mylist:
+                    print(rel_obj,'已在列表,返回')
+                    return item
                 opts = rel_obj._meta
                 try:
                     item_res_uri = reverse(
@@ -73,8 +77,14 @@ class DetailablePlugin(BaseAdminPlugin):
                                 args=(getattr(rel_obj, opts.pk.attname),))
                         else:
                             edit_url = ''
-                        item.btns.append('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s"><i class="fa fa-info-circle"></i></a>'
+                        self.mylist.append(rel_obj)
+                        tmphtml = ('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s"><i class="fa fa-info-circle"></i></a>'
                                          % (item_res_uri, edit_url, _(u'Details of %s') % str(rel_obj)))
+                        if tmphtml in item.btns:
+                            print('按钮已有')
+                        else:
+                            item.btns.append(tmphtml)
+                        print('item.btns',item.btns)
                 except NoReverseMatch:
                     pass
         return item

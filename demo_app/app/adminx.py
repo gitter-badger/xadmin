@@ -93,8 +93,8 @@ class groupinfoAdmin(object):
 
 @xadmin.sites.register(litreat)
 class litreatAdmin(object):
-    list_display = [ "yearm","cust_name","icc_id","all_acc","avg_acc","is_life","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","all_12jy_count","all_12jy_num","is_show","is_ontime",]
-    list_x_display = ["is_life","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime", ]
+    list_display = [ "yearm","cust_name","icc_id","all_acc","avg_acc","is_life","is_show","is_ontime","all_12jy_count","all_12jy_num",]
+    list_x_display = ["jy_count","jy_num","day_avg","all_jy_count","all_jy_num","all_12jy_count","all_12jy_num", ]
 
     detailitem = ['all_acc']
 
@@ -131,6 +131,17 @@ class litreatAdmin(object):
         print('self.request', self.request,self.request.GET.get('_q_',default='0'))
         iccqry = self.request.GET.get('_q_',default='0')
         queryset = super().get_list_queryset()
+        print('self.request.GET', self.request.GET.dict())
+        if self.request.GET.dict():
+            print('有get参数')
+        else:
+            #获取上个月份
+            dateym = datetime.datetime.now().strftime('%Y-%m')
+            startTime = datetime.datetime.strptime(dateym, '%Y-%m')
+            # 前一个月最后一天
+            pre_month = startTime.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
+            pre_month_str = datetime.datetime.strftime(pre_month, "%Y-%m")
+            print('无get参数pre',dateym)
         if len(iccqry)==18 or self.user.is_superuser:
             return queryset
         print(self.user,'self.request.user',self.request.user)
@@ -142,6 +153,7 @@ class litreatAdmin(object):
                 groupidlist.append(a.group_no)
         print('0queryset',queryset.values())
         queryset = queryset.filter(open_no__in=groupidlist)#.all().only('jy_count')
+
         # import copy
         # d = copy.deepcopy(queryset)  # 对象拷贝，深拷贝
         # print('1queryset', d.values())
@@ -858,7 +870,11 @@ def updatejf(yearmonth,icc_list):
         print('pre_month_str',pre_month_str)
         bb = litreat.objects.filter(yearm=pre_month_str, icc_id=col).first()
         if bb:
-            alljf = bb.all_acc + nowjf - bb.is_show*100-zkjf[lifezk]
+            #本月积分-不重复记分项 怎么样都是正的
+            maybe = nowjf - bb.is_show*100-zkjf[lifezk]
+            if maybe<0:
+                maybe=0
+            alljf = bb.all_acc + maybe
             if alljf<0:
                 alljf=0
         kyjf = nowjf -aa.used_acc
