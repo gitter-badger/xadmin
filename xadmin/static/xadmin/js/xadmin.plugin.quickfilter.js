@@ -4,7 +4,7 @@
   
   function addShowMore($,v){
 	$(v).nextUntil('li.nav-header').last().after(
-		$('<li class="filter-multiselect"><a class="small filter-item" href="#"><input class="filter-col-1" type="checkbox"><span class="filter-col-2">Show more</span></a></li>').click(function(e){
+		$('<li class="filter-multiselect"><a class="small filter-item" href="#"><input class="filter-col-1" type="checkbox"><span class="filter-col-2">更多</span></a></li>').click(function(e){
 			console.log('abcdef');
 			e.preventDefault();
 			e.stopPropagation();
@@ -18,7 +18,7 @@
   
   function addShowLess($,v){
 	$(v).nextUntil('li.nav-header').last().after(
-		$('<li class="filter-multiselect"><a class="small filter-item" href="#"><input class="filter-col-1" type="checkbox"><span class="filter-col-2">Show less</span></a></li>').click(function(e){
+		$('<li class="filter-multiselect"><a class="small filter-item" href="#"><input class="filter-col-1" type="checkbox"><span class="filter-col-2">收回</span></a></li>').click(function(e){
 			e.preventDefault();
 			e.stopPropagation();
 			$(v).nextUntil('li.nav-header').filter(function(i){return !$(this).find('input').is(':checked');}).slice(max).hide();

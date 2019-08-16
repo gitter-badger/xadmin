@@ -78,7 +78,7 @@ class DetailablePlugin(BaseAdminPlugin):
                         else:
                             edit_url = ''
                         self.mylist.append(rel_obj)
-                        tmphtml = ('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s"><i class="fa fa-info-circle"></i></a>'
+                        tmphtml = ('<a data-res-uri="%s" data-edit-uri="%s" class="details-handler" rel="tooltip" title="%s">详情<i class="fa fa-info-circle"></i></a>'
                                          % (item_res_uri, edit_url, _(u'Details of %s') % str(rel_obj)))
                         if tmphtml in item.btns:
                             print('按钮已有')

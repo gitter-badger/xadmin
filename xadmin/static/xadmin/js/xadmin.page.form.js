@@ -1,4 +1,11 @@
 ;(function($){
+    var hint_id_password = $("#hint_id_password");
+    if($(hint_id_password).html()!=undefined){
+        // alert($(hint_id_password).html());
+        $(hint_id_password).html('<a href="../password/">修改密码</a>');
+
+    }
+
     $(function() {
         var action_bar = $('.form-actions');
         if(action_bar.length){

@@ -127,7 +127,7 @@ MEDIA_URL='/media/'
 # MEDIA_ROOT='/home/user/media/'
 MEDIA_ROOT = os.path.join(SITE_ROOT)
 TEMPLATES[0]['OPTIONS']['context_processors'].append('django.template.context_processors.media')
-LANGUAGE_CODE = 'zh-hans'#'zh-hans'en-us en-AU
+LANGUAGE_CODE = 'zh-Hans'#'zh-hans'en-us en-AU
 
 TIME_ZONE = 'Asia/Shanghai'#'Asia/Shanghai' America/Chicago Australia/Canberra
 

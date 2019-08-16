@@ -141,7 +141,8 @@ class litreatAdmin(object):
             # 前一个月最后一天
             pre_month = startTime.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
             pre_month_str = datetime.datetime.strftime(pre_month, "%Y-%m")
-            print('无get参数pre',dateym)
+            print('无get参数pre',pre_month_str)
+            queryset=queryset.filter(yearm=pre_month_str)
         if len(iccqry)==18 or self.user.is_superuser:
             return queryset
         print(self.user,'self.request.user',self.request.user)
