@@ -439,7 +439,7 @@ class litreat(models.Model):
 
     # cust = models.ForeignKey(customer, on_delete=models.CASCADE, verbose_name="customer")
     yearm = models.CharField(max_length=20, verbose_name="记录年月")#models.DateField( auto_now_add=False, verbose_name="记录年月")#
-    icc_id = models.CharField(max_length=50, verbose_name="身份证号")
+    icc_id = models.CharField(max_length=50, verbose_name="法人身份证号")
     avg_acc = models.IntegerField(verbose_name="月均贡献度", default=0)
     nowm_acc = models.IntegerField(verbose_name="本月积分",default=0)
     all_acc = models.IntegerField(verbose_name="总贡献度",default=0)
@@ -447,13 +447,13 @@ class litreat(models.Model):
     open_ins = models.CharField(max_length=50, verbose_name="开户机构",null=True,blank=True)
     open_no = models.CharField(max_length=50, verbose_name="开户机构号")
     # open_ins = models.ForeignKey(groupinfo, on_delete=models.CASCADE, verbose_name="开户机构")
-    cust_name = models.CharField(max_length=20, verbose_name="客户名")
-    jy_count = models.IntegerField(verbose_name="交易笔数",default=0)
-    jy_num = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="交易金额",default=0)
-    day_avg = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="日均",default=0)
-    all_jy_count = models.IntegerField(verbose_name="总交易笔数",default=0)
-    all_jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="总交易金额",default=0.0)
-    is_life = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="百富生活圈折扣",default=0.0)#(default=False, verbose_name="百富生活圈折扣")
+    cust_name = models.CharField(max_length=20, verbose_name="商户法人/负责人姓名")
+    jy_count = models.IntegerField(verbose_name="卡客户交易笔数",default=0)
+    jy_num = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="卡客户交易金额",default=0)
+    day_avg = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="名下商户账户日均余额",default=0)
+    all_jy_count = models.IntegerField(verbose_name="收单交易笔数",default=0)
+    all_jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="收单交易金额",default=0.0)
+    is_life = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="百福生活圈折扣",default=0.0)#(default=False, verbose_name="百福生活圈折扣")
     jnlx_num = models.DecimalField(max_digits=10, decimal_places=2,verbose_name="缴纳利息",default=0)
     is_show = models.BooleanField(default=False, verbose_name="是否展示易拉宝")
     is_ontime = models.BooleanField(default=True, verbose_name="是否按时还款")
@@ -463,9 +463,10 @@ class litreat(models.Model):
     is_quit = models.BooleanField(default=False, verbose_name="是否清退")
     # is_bak = models.BooleanField(default=False, verbose_name="是否")
     ts_count = models.IntegerField(verbose_name="投诉次数", default=0)
-    all_12jy_count = models.IntegerField(verbose_name="交易总笔数",default=0)
-    all_12jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="交易总金额",default=0.0)
-    avg_12jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="月均金额",default=0.0)
+    all_12jy_count = models.IntegerField(verbose_name="名下商户交易总笔数",default=0)
+    all_12jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="名下商户交易总金额",default=0.0)
+    avg_12jy_num = models.DecimalField(max_digits=20, decimal_places=2, verbose_name="月均交易额", default=0.0)
+
     # date = models.DateTimeField( auto_now_add=True)#,input_formats=['%d/%m/%Y  %H:%M:%S','%d/%m/%Y  %H:%M:%S',
     # train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
     # item = models.ForeignKey(treatment_item, on_delete=models.CASCADE)
@@ -474,15 +475,21 @@ class litreat(models.Model):
 
     def __str__(self):
         self.avg_12jy_num = round((self.all_12jy_num/12), 2)
+        # self.save()
         return str(self.id)#+' '+self.last_name
+
+    # def avg_12jy_num(self):
+    #     #简单计算
+    #     self.avg_12jy_num = round((self.all_12jy_num/12), 2)
+    #     self.save()
+    #     return self.avg_12jy_num
 
     def cost(self):
         #简单计算
         return str(self.nowm_acc+self.nowm_acc)
-    # def agv_12jy_num(self):
-    #     verbose_name = "投诉次数"
-    #     return str(round((self.all_12jy_num/12), 2))
+
     class Meta:
+
         verbose_name = u"客户信息"
         verbose_name_plural = verbose_name
         unique_together = ('yearm','icc_id')

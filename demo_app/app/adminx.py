@@ -93,8 +93,8 @@ class groupinfoAdmin(object):
 
 @xadmin.sites.register(litreat)
 class litreatAdmin(object):
-    list_display = [ "yearm","cust_name","icc_id","all_acc","avg_acc","is_life","is_show","is_ontime","all_12jy_count","all_12jy_num","avg_12jy_num",]
-    list_x_display = ["jy_count","jy_num","day_avg","all_jy_count","all_jy_num","all_12jy_count","all_12jy_num", ]
+    list_display = [ "yearm","cust_name","icc_id","all_12jy_count","all_12jy_num","day_avg","con_num","avg_12jy_num",]
+    list_x_display = ["nowm_acc","all_acc","is_life","open_ins","open_no","jy_count","jy_num","all_jy_count","all_jy_num","is_show","is_ontime","can_use_acc","used_acc","acc_detail","is_quit","mon_avg", ]
 
     detailitem = ['all_acc']
 
@@ -107,7 +107,7 @@ class litreatAdmin(object):
     #     ("Second Form", ("contact", "telphone", "address")),
     #     ("Thread Form", ("customer_id",))
     # ]
-    search_fields = [ "yearm","icc_id","nowm_acc","all_acc","is_life","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime","can_use_acc","used_acc","acc_detail","is_quit"]
+    search_fields = [ "yearm","icc_id","nowm_acc","all_acc","is_life","cust_name","con_num","open_ins","open_no","jy_count","jy_num","day_avg","all_jy_count","all_jy_num","is_show","is_ontime","can_use_acc","used_acc","acc_detail","is_quit","mon_avg"]
     list_filter = [
         "yearm","open_no"
     ]
@@ -131,6 +131,13 @@ class litreatAdmin(object):
         print('self.request', self.request,self.request.GET.get('_q_',default='0'))
         iccqry = self.request.GET.get('_q_',default='0')
         queryset = super().get_list_queryset()
+        for query in queryset:
+            print('query',query.id,query.all_12jy_num,query.avg_12jy_num)
+            if query.avg_12jy_num==0.00:
+                query.avg_12jy_num=round((query.all_12jy_num / 12), 2)
+        # litreat.objects.all().update(
+        #     avg_12jy_num=round((all_12jy_num / 12), 2),
+        # )
         print('self.request.GET', self.request.GET.dict(),self.request)
         # if ('p' in self.request.GET.dict().keys() and len(self.request.GET.dict().keys()) == 1) or len(
         #         self.request.GET.dict().keys()) == 0:
@@ -159,6 +166,8 @@ class litreatAdmin(object):
         print('0queryset',queryset.values())
         queryset = queryset.filter(open_no__in=groupidlist)#.all().only('jy_count')
 
+        # self.avg_12jy_num = round((self.all_12jy_num / 12), 2)
+        # self.save()
         # import copy
         # d = copy.deepcopy(queryset)  # 对象拷贝，深拷贝
         # print('1queryset', d.values())
@@ -848,20 +857,14 @@ def updatejf(yearmonth,icc_list):
 
             #本月积分  是否生活圈*100+Limit(交易总笔数*1,200)+Limit(int(总交易金额/100)*1,300)+Limit(int(日均/1000)*1,200)+Limit(交易笔数*1,10)+Limit(int(交易金额/100)*1,10)
             print('zkjf[lifezk]',zkjf[lifezk])
-            nowjf = zkjf[lifezk]+(aa.all_jy_count*1 if(aa.all_jy_count*1<200)else 200)+(int(aa.all_jy_num/100) if(int(aa.all_jy_num/100)<200)else 200) \
-                    + (int(aa.day_avg/1000) if(int(aa.day_avg/1000)<200)else 200) \
-                    + (int(aa.jy_count/1) if(int(aa.jy_count/1)<10)else 10) \
-                    + (int(aa.jy_num/100) if(int(aa.jy_num/100)<10)else 10) \
-                    + (int(aa.jnlx_num/500) if(int(aa.jnlx_num/500)<200)else 200) \
+            nowjf = zkjf[lifezk]+(aa.all_jy_count*1 if(aa.all_jy_count*1<300) else 300)+(int(aa.all_jy_num/100) if(int(aa.all_jy_num/100)<300) else 300) \
+                    + (int(aa.day_avg/1000) if(int(aa.day_avg/1000)<1000)else 1000) \
                     + aa.is_show*100  + good*30 + aa.is_ontime*50
             print(aa.icc_id,'nowjf',nowjf)
         else:
-            nowjf = (aa.all_jy_count * 1 if (aa.all_jy_count * 1 < 200) else 200) + (
-                int(aa.all_jy_num / 100) if (int(aa.all_jy_num / 100) < 200) else 200) \
-                    + (int(aa.day_avg / 1000) if (int(aa.day_avg / 1000) < 200) else 200) \
-                    + (int(aa.jy_count / 1) if (int(aa.jy_count / 1) < 10) else 10) \
-                    + (int(aa.jy_num / 100) if (int(aa.jy_num / 100) < 10) else 10) \
-                    + (int(aa.jnlx_num / 500) if (int(aa.jnlx_num / 500) < 200) else 200) \
+            nowjf = (aa.all_jy_count * 1 if (aa.all_jy_count * 1 < 300) else 300) + (
+                int(aa.all_jy_num / 100) if (int(aa.all_jy_num / 100) < 300) else 300) \
+                    + (int(aa.day_avg / 1000) if (int(aa.day_avg / 1000) < 1000) else 1000) \
                     + aa.is_show * 100 + good*30 +aa.is_ontime*50
             print(aa.icc_id, 'nowjf', nowjf)
 
