@@ -1,0 +1,23 @@
+[
+  {
+    'url': '/app/groupinfo/',
+    'title': '机构信息',
+    'icon': None,
+    'perm': 'app.view_groupinfo',
+    'order': 7
+  },
+  {
+    'url': '/app/litreat/',
+    'title': '客户信息',
+    'icon': None,
+    'perm': 'app.view_litreat',
+    'order': 8
+  },
+  {
+    'url': '/app/usergroupinfo/',
+    'title': '支行管理',
+    'icon': None,
+    'perm': 'app.view_usergroupinfo',
+    'order': 9
+  }
+]

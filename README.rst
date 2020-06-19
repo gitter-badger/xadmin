@@ -137,6 +137,7 @@ Run Demo Locally
 .. code:: bash
 
     cd demo_app
+   ./manage.py makemigrations
     ./manage.py migrate
     ./manage.py runserver
 

@@ -394,11 +394,33 @@ class CommAdminView(BaseAdminView):
             menu['menus'].sort(key=sortkeypicker(['order', 'title']))
 
         nav_menu = list(nav_menu.values())
+        print('nav_menu',nav_menu)#[0]['menus']
+        for menu in nav_menu:
+            if menu['first_url']=='/app/usergroupinfo/':
+                print(menu['menus'])
+                for me in menu['menus']:
+                    # print('url',me['url'])
+                    if me['perm']=='app.view_litreat':
+                        # print('me',me)
+                        # 获取上个月份
+                        # pre_month_str='2019-07' +pre_month_str
+                        # print('无get参数pre', pre_month_str)
+                        me['url'] = '/app/litreat/?_p_yearm__in='+self.get_pre_month()
+                        print('3me',me)
+
         nav_menu.sort(key=lambda x: x['title'])
 
         site_menu.extend(nav_menu)
 
         return site_menu
+
+    def get_pre_month(self):
+        dateym = datetime.datetime.now().strftime('%Y-%m')
+        startTime = datetime.datetime.strptime(dateym, '%Y-%m')
+        # 前一个月最后一天
+        pre_month = startTime.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
+        pre_month_str = datetime.datetime.strftime(pre_month, "%Y-%m")
+        return pre_month_str
 
     @filter_hook
     def get_context(self):

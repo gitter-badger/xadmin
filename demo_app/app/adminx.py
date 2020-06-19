@@ -93,7 +93,7 @@ class groupinfoAdmin(object):
 
 @xadmin.sites.register(litreat)
 class litreatAdmin(object):
-    list_display = [ "yearm","cust_name","icc_id","all_acc","avg_acc","is_life","is_show","is_ontime","all_12jy_count","all_12jy_num",]
+    list_display = [ "yearm","cust_name","icc_id","all_acc","avg_acc","is_life","is_show","is_ontime","all_12jy_count","all_12jy_num","avg_12jy_num",]
     list_x_display = ["jy_count","jy_num","day_avg","all_jy_count","all_jy_num","all_12jy_count","all_12jy_num", ]
 
     detailitem = ['all_acc']
@@ -131,18 +131,22 @@ class litreatAdmin(object):
         print('self.request', self.request,self.request.GET.get('_q_',default='0'))
         iccqry = self.request.GET.get('_q_',default='0')
         queryset = super().get_list_queryset()
-        print('self.request.GET', self.request.GET.dict())
-        if self.request.GET.dict():
-            print('有get参数')
-        else:
-            #获取上个月份
-            dateym = datetime.datetime.now().strftime('%Y-%m')
-            startTime = datetime.datetime.strptime(dateym, '%Y-%m')
-            # 前一个月最后一天
-            pre_month = startTime.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
-            pre_month_str = datetime.datetime.strftime(pre_month, "%Y-%m")
-            print('无get参数pre',pre_month_str)
-            queryset=queryset.filter(yearm=pre_month_str)
+        print('self.request.GET', self.request.GET.dict(),self.request)
+        # if ('p' in self.request.GET.dict().keys() and len(self.request.GET.dict().keys()) == 1) or len(
+        #         self.request.GET.dict().keys()) == 0:
+        #
+        # # if self.request.GET.dict():
+        # #     print('有get参数',self.request.GET.dict().keys())
+        #
+        # # else:
+        #     #获取上个月份
+        #     dateym = datetime.datetime.now().strftime('%Y-%m')
+        #     startTime = datetime.datetime.strptime(dateym, '%Y-%m')
+        #     # 前一个月最后一天
+        #     pre_month = startTime.replace(day=1) - datetime.timedelta(days=1)  # timedelta是一个不错的函数
+        #     pre_month_str = datetime.datetime.strftime(pre_month, "%Y-%m")
+        #     print('无get参数pre',pre_month_str)
+        #     queryset=queryset.filter(yearm=pre_month_str)
         if len(iccqry)==18 or self.user.is_superuser:
             return queryset
         print(self.user,'self.request.user',self.request.user)

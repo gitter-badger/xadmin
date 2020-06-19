@@ -1,0 +1,85 @@
+[
+  {
+    'first_url': '/app/usergroupinfo/',
+    'title': 'App',
+    'menus': [
+      {
+        'perm': 'app.view_groupinfo',
+        'order': 7,
+        'title': '机构信息',
+        'icon': None,
+        'url': '/app/groupinfo/'
+      },
+      {
+        'perm': 'app.view_litreat',
+        'order': 8,
+        'title': '客户信息',
+        'icon': None,
+        'url': '/app/litreat/'
+      },
+      {
+        'perm': 'app.view_usergroupinfo',
+        'order': 9,
+        'title': '支行管理',
+        'icon': None,
+        'url': '/app/usergroupinfo/'
+      }
+    ]
+  },
+  {
+    'first_icon': 'fa fa-lock',
+    'first_url': '/auth/permission/',
+    'title': '认证和授权',
+    'menus': [
+      {
+        'perm': 'auth.view_group',
+        'order': 2,
+        'title': '组',
+        'icon': 'fa fa-group',
+        'url': '/auth/group/'
+      },
+      {
+        'perm': 'auth.view_user',
+        'order': 3,
+        'title': '用户',
+        'icon': 'fa fa-user',
+        'url': '/auth/user/'
+      },
+      {
+        'perm': 'auth.view_permission',
+        'order': 4,
+        'title': '权限',
+        'icon': 'fa fa-lock',
+        'url': '/auth/permission/'
+      }
+    ]
+  },
+  {
+    'first_icon': 'fa fa-cog',
+    'first_url': '/xadmin/log/',
+    'title': '管理',
+    'menus': [
+      {
+        'perm': 'xadmin.view_log',
+        'order': 6,
+        'title': '日志记录',
+        'icon': 'fa fa-cog',
+        'url': '/xadmin/log/'
+      }
+    ]
+  },
+  {
+    'first_icon': 'fa fa-exchange',
+    'first_url': '/reversion/revision/',
+    'title': 'Reversion',
+    'menus': [
+      {
+        'perm': 'reversion.view_revision',
+        'order': 10,
+        'title': '历史版本',
+        'icon': 'fa fa-exchange',
+        'url': '/reversion/revision/'
+      }
+    ]
+  }
+]

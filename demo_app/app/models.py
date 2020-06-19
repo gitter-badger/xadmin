@@ -465,6 +465,7 @@ class litreat(models.Model):
     ts_count = models.IntegerField(verbose_name="投诉次数", default=0)
     all_12jy_count = models.IntegerField(verbose_name="交易总笔数",default=0)
     all_12jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="交易总金额",default=0.0)
+    avg_12jy_num = models.DecimalField(max_digits=20, decimal_places=2,verbose_name="月均金额",default=0.0)
     # date = models.DateTimeField( auto_now_add=True)#,input_formats=['%d/%m/%Y  %H:%M:%S','%d/%m/%Y  %H:%M:%S',
     # train = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="培训机构名称")
     # item = models.ForeignKey(treatment_item, on_delete=models.CASCADE)
@@ -472,12 +473,15 @@ class litreat(models.Model):
     # prov = models.ForeignKey(provider, on_delete=models.CASCADE, verbose_name="provider")
 
     def __str__(self):
+        self.avg_12jy_num = round((self.all_12jy_num/12), 2)
         return str(self.id)#+' '+self.last_name
 
     def cost(self):
         #简单计算
         return str(self.nowm_acc+self.nowm_acc)
-
+    # def agv_12jy_num(self):
+    #     verbose_name = "投诉次数"
+    #     return str(round((self.all_12jy_num/12), 2))
     class Meta:
         verbose_name = u"客户信息"
         verbose_name_plural = verbose_name
